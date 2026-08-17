@@ -1,0 +1,36 @@
+# cPanel Git Version Control deploy tasks.
+#
+# Setup (one-time, in cPanel):
+#   1. Git Version Control → create/pull this repo so its working copy IS the
+#      Node app's "Application root" configured in Setup Node.js App. (If your
+#      setup instead clones to a separate staging path, uncomment the
+#      DEPLOYPATH export + rsync line below to copy into the real app root.)
+#   2. Setup Node.js App → point Application root at that checkout, set the
+#      Application startup file to `server.js`, select the Node version, then
+#      note the "Enter to the virtual environment" command it prints — this
+#      script assumes the venv's `npm`/`node` are already on PATH when cPanel
+#      runs these tasks (cPanel does this automatically for Git deploys tied
+#      to a Node app).
+#   3. Push to the deployed branch (or click "Deploy HEAD Commit" in the
+#      cPanel UI) to trigger this file.
+#
+# `npm.run.build` needs devDependencies (TypeScript, Tailwind, etc.), so we
+# install everything, build, then let `npm prune --omit=dev` shrink
+# node_modules for the runtime — Passenger only needs the production bundle
+# and `next`'s runtime deps to serve `server.js`.
+
+---
+deployment:
+  tasks:
+    # - export DEPLOYPATH=/home/USERNAME/divin-ai/
+    # - /bin/cp -R * "$DEPLOYPATH"
+    - /bin/echo "Installing dependencies..."
+    - npm install
+    - /bin/echo "Building Next.js app..."
+    - npm run build
+    - /bin/echo "Pruning devDependencies for runtime..."
+    - npm prune --omit=dev
+    - /bin/echo "Restarting Passenger app..."
+    - /bin/mkdir -p tmp
+    - /bin/touch tmp/restart.txt
+    - /bin/echo "Deploy complete."
