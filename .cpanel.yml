@@ -1,36 +1,37 @@
 # cPanel Git Version Control deploy tasks.
 #
 # Setup (one-time, in cPanel):
-#   1. Git Version Control → create/pull this repo so its working copy IS the
-#      Node app's "Application root" configured in Setup Node.js App. (If your
-#      setup instead clones to a separate staging path, uncomment the
-#      DEPLOYPATH export + rsync line below to copy into the real app root.)
-#   2. Setup Node.js App → point Application root at that checkout, set the
-#      Application startup file to `server.js`, select the Node version, then
-#      note the "Enter to the virtual environment" command it prints — this
-#      script assumes the venv's `npm`/`node` are already on PATH when cPanel
-#      runs these tasks (cPanel does this automatically for Git deploys tied
-#      to a Node app).
-#   3. Push to the deployed branch (or click "Deploy HEAD Commit" in the
-#      cPanel UI) to trigger this file.
+#   1. Git Version Control → clone/pull this repo to e.g. ~/divin-ai (a
+#      folder OUTSIDE public_html — Laravel's real webroot is the app's own
+#      public/ subfolder, never the app root).
+#   2. Domains → set this domain/subdomain's Document Root to
+#      ~/divin-ai/public (cPanel lets you pick a custom document root when
+#      creating/editing a domain). If your plan can't set a custom document
+#      root, the fallback is to point public_html's index.php at
+#      ../divin-ai/public/index.php and symlink/copy the rest of public/'s
+#      contents into public_html instead.
+#   3. Copy .env.example to ~/divin-ai/.env, fill in real DB/Resend/Stripe
+#      credentials, then `php artisan key:generate` once by hand.
+#   4. Push to the deployed branch (or click "Deploy HEAD Commit") to run
+#      this file.
 #
-# `npm.run.build` needs devDependencies (TypeScript, Tailwind, etc.), so we
-# install everything, build, then let `npm prune --omit=dev` shrink
-# node_modules for the runtime — Passenger only needs the production bundle
-# and `next`'s runtime deps to serve `server.js`.
+# No Node on this host: compiled Vite/Tailwind assets in public/build are
+# committed to git (see .gitignore) and must be rebuilt locally with
+# `npm run build` before every push that changes resources/css or
+# resources/js — this deploy step does not (and cannot) run `npm run build`.
 
 ---
 deployment:
   tasks:
-    # - export DEPLOYPATH=/home/USERNAME/divin-ai/
-    # - /bin/cp -R * "$DEPLOYPATH"
-    - /bin/echo "Installing dependencies..."
-    - npm install
-    - /bin/echo "Building Next.js app..."
-    - npm run build
-    - /bin/echo "Pruning devDependencies for runtime..."
-    - npm prune --omit=dev
-    - /bin/echo "Restarting Passenger app..."
-    - /bin/mkdir -p tmp
-    - /bin/touch tmp/restart.txt
+    - /bin/echo "Installing PHP dependencies..."
+    - composer install --no-dev --optimize-autoloader --no-interaction
+    - /bin/echo "Running migrations..."
+    - php artisan migrate --force
+    - /bin/echo "Ensuring storage symlink exists..."
+    - php artisan storage:link || true
+    - /bin/echo "Caching config/routes/views..."
+    - php artisan config:cache
+    - php artisan route:cache
+    - php artisan view:cache
+    - php artisan event:cache
     - /bin/echo "Deploy complete."

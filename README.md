@@ -1,36 +1,52 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# divin.ai
 
-## Getting Started
+An open, AI-engine-agnostic business registry. See [docs/divin_ai_claude_code_prompt.md](docs/divin_ai_claude_code_prompt.md)
+for the full product brief.
 
-First, run the development server:
+## Stack
+
+- **Laravel 13** (PHP 8.3) — server-rendered Blade views, no SPA/client-only
+  shell, matching the product's own "be crawlable" thesis.
+- **MySQL/MariaDB** via Eloquent — the target HostGator cPanel account is
+  shared/PHP-only (no Node.js App support, no root), so the stack is plain
+  LAMP: Apache + PHP + MySQL, deployed via cPanel's Git Version Control.
+- **Tailwind CSS v4** (CSS-first `@theme` tokens in `resources/css/app.css`)
+  + **Vite**, used as a **build-time-only** tool — the production server has
+  no Node runtime, so compiled assets in `public/build` are committed to git
+  (see `.gitignore`) rather than built on deploy. Run `npm run build` locally
+  before pushing any change under `resources/css` or `resources/js`.
+- **Resend** for transactional email (magic-link login, claim OTP, freshness
+  alerts) in production; local dev uses Laragon's Mailpit SMTP catcher
+  (`http://localhost:8025`).
+- **Stripe** for annual-billing subscriptions (scaffolded, not fully wired).
+
+## Local development (Windows + Laragon)
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+composer install
+npm install
+cp .env.example .env   # then fill in local DB_* values (see below)
+php artisan key:generate
+php artisan migrate
+php artisan storage:link
+npm run build           # or `npm run dev` while iterating on styles/JS
+php artisan serve
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Local `.env` expects Laragon running (`Start All` in the Laragon app) with a
+`divinai` MySQL database and Mailpit for mail — see the committed `.env` for
+the exact local values already in use during development.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Deployment (cPanel)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+See `.cpanel.yml` for the Git-deploy task list and the setup steps documented
+at the top of that file (document root, `.env`, one-time `key:generate`).
+The server never runs `npm run build` — it has no Node runtime — so compiled
+assets must already be committed and up to date before deploying.
 
-## Learn More
+## Testing / linting
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+vendor/bin/pint --test   # code style
+php artisan test         # PHPUnit
+```
