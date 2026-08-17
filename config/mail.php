@@ -115,4 +115,8 @@ return [
         'name' => env('MAIL_FROM_NAME', env('APP_NAME', 'Laravel')),
     ],
 
+    // Where the public contact form (resources/views/marketing/contact.blade.php)
+    // delivers submissions. Defaults to the same inbox as MAIL_FROM_ADDRESS.
+    'contact_inbox' => env('CONTACT_INBOX', env('MAIL_FROM_ADDRESS', 'hello@example.com')),
+
 ];
