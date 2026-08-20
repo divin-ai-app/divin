@@ -67,6 +67,17 @@ Confirmed quirks of this specific hosting environment, already handled by
 - Mail hosting for `hello@divin.ai` (real inboxes, e.g. Roundcube) is
   separate from Resend and untouched by any of the above — Resend is
   send-only (`Enable Receiving` stays off in its dashboard).
+- **cPanel's PHP version manager periodically touches `public/.htaccess`**,
+  appending a `# php -- BEGIN cPanel-generated handler...` comment block and
+  leaving timestamped `.htaccess.phpupgrader.*` backup files alongside it.
+  Left unhandled, this makes Git Version Control refuse the *next* deploy
+  ("uncommitted changes exist") since the tracked file no longer matches
+  what's on disk. Fixed by committing that same comment block permanently
+  into the tracked `public/.htaccess` and gitignoring the backup-file
+  pattern — but if cPanel changes the PHP version/handler again and deploy
+  refuses with the same error, `cd ~/repositories/divin-ai && git status`
+  to see what changed, merge it into `public/.htaccess` locally the same
+  way, and push.
 
 ## Testing / linting
 

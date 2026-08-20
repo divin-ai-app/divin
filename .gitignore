@@ -24,6 +24,13 @@
 /storage/*.key
 /storage/pail
 /vendor
+
+# cPanel's PHP version manager touches public/.htaccess (its actual edit —
+# a "do not edit" comment block — is merged into the tracked file below) and
+# leaves timestamped backup copies here every time it does. Left untracked,
+# these silently block the next `cpanel.yml` deploy ("uncommitted changes
+# exist"). See README.md.
+/public/.htaccess.phpupgrader.*
 _ide_helper.php
 Homestead.json
 Homestead.yaml
