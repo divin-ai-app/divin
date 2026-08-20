@@ -135,7 +135,12 @@ class ClaimController extends Controller
             'mode' => 'subscription',
             'customer_email' => Auth::user()->email,
             'line_items' => [['price' => $priceId, 'quantity' => 1]],
-            'success_url' => route('marketing.claim.confirmation', ['locale' => $locale, 'profile' => $profile]).'?session_id={CHECKOUT_SESSION_ID}',
+            // No {CHECKOUT_SESSION_ID} query param here on purpose: the
+            // confirmation view never reads it (the webhook is the sole
+            // source of truth for activation, per this class's docblock),
+            // and the host's ModSecurity/WAF blocks the redirect when
+            // Stripe substitutes that long token into the URL.
+            'success_url' => route('marketing.claim.confirmation', ['locale' => $locale, 'profile' => $profile]),
             'cancel_url' => route('marketing.claim.plan', ['locale' => $locale, 'profile' => $profile]),
             'metadata' => ['profile_id' => $profile->id, 'tier' => $tier->value],
         ]);
