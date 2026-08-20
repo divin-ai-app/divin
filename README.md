@@ -79,6 +79,32 @@ Confirmed quirks of this specific hosting environment, already handled by
   to see what changed, merge it into `public/.htaccess` locally the same
   way, and push.
 
+### Cron Jobs (Phase 6 — Managed freshness + crawler visit rollup)
+
+This hosting plan has no persistent process/scheduler daemon, so Laravel's
+task scheduler (`routes/console.php`) only does anything if something
+actually calls `php artisan schedule:run` periodically — nothing does that
+here. Instead, point cPanel's own **Cron Jobs** app directly at each
+command. In cPanel: **Advanced → Cron Jobs → Add New Cron Job**, common
+settings ("Once Per Day", midnight) for both:
+
+```bash
+php /home1/dwivvkte/repositories/divin-ai/artisan freshness:check
+php /home1/dwivvkte/repositories/divin-ai/artisan crawler:rollup
+```
+
+(Use the full path to whichever `php` binary cPanel's MultiPHP Manager has
+selected for this domain if the bare `php` above isn't on the cron shell's
+`$PATH` — check with `which php` in cPanel's Terminal app first.)
+
+- `freshness:check` — diffs every Managed profile's DataSource rows against
+  the live profile and emails owners once per new drift.
+- `crawler:rollup` — rolls yesterday-and-older raw `crawler_visit_logs`
+  (written on every real AI-bot hit to a public profile page, see
+  `App\Http\Middleware\LogCrawlerVisit`) into `crawler_visit_daily_aggs`
+  and prunes them — the dashboard's crawler-activity chart reads the
+  aggregate table only, so visits never show up there until this has run.
+
 ## Testing / linting
 
 ```bash
