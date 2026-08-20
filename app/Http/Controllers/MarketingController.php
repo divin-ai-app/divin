@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BusinessProfile;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -34,13 +36,12 @@ class MarketingController extends Controller
         $result = null;
 
         if ($request->filled('q')) {
-            // Phase 1 placeholder: no ingestion pipeline exists yet (see plan
-            // §8 "Out of scope"), so this mimics the funnel's shape against a
-            // canned example rather than a real lookup. Phase 2 seeds real
-            // BusinessProfile rows this can actually search.
+            $query = $request->string('q')->toString();
+            $matches = $this->searchProfiles($query);
+
             $result = [
-                'query' => $request->string('q'),
-                'found' => false,
+                'query' => $query,
+                'matches' => $matches,
             ];
         }
 
@@ -116,9 +117,32 @@ class MarketingController extends Controller
         return back()->with('status', 'Thanks — we\'ll get back to you shortly.');
     }
 
-    public function claim(string $locale): View
+    public function claim(string $locale, Request $request): View
     {
-        return view('marketing.claim');
+        $result = null;
+
+        if ($request->filled('q')) {
+            $query = $request->string('q')->toString();
+            $result = [
+                'query' => $query,
+                'matches' => $this->searchProfiles($query),
+            ];
+        }
+
+        return view('marketing.claim', compact('result'));
+    }
+
+    /** @return Collection<int, BusinessProfile> */
+    private function searchProfiles(string $query): Collection
+    {
+        return BusinessProfile::published()
+            ->where(function ($q) use ($query) {
+                $q->where('name', 'like', "%{$query}%")
+                    ->orWhere('city', 'like', "%{$query}%");
+            })
+            ->orderBy('name')
+            ->limit(10)
+            ->get();
     }
 
     /**

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\MarketingController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SystemController;
 use Illuminate\Support\Facades\Route;
 
@@ -32,6 +33,5 @@ Route::prefix('{locale}')
         Route::post('/contact', [MarketingController::class, 'submitContact'])->name('contact.submit');
         Route::get('/claim', [MarketingController::class, 'claim'])->name('claim');
 
-        // /{locale}/p/{slug} (public business profile) lands in Phase 2 once
-        // BusinessProfile exists — see plan §3.
+        Route::get('/p/{profile}', [ProfileController::class, 'show'])->name('profile.show');
     });

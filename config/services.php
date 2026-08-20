@@ -35,4 +35,16 @@ return [
         ],
     ],
 
+    // Shared secret the future ingestion pipeline sends as X-Ingestion-Key
+    // (see App\Http\Middleware\VerifyIngestionKey, plan §4/§8).
+    'ingestion' => [
+        'key' => env('INGESTION_API_KEY'),
+    ],
+
+    // Shared secret the cPanel Cron Job must pass to /api/cron/freshness-check
+    // (Phase 6 — see plan §7).
+    'cron' => [
+        'secret' => env('CRON_SECRET'),
+    ],
+
 ];

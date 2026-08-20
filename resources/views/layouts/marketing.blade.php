@@ -18,15 +18,11 @@
     <meta name="twitter:card" content="summary_large_image">
 
     {{-- Organization schema.org — on every page, per plan §2's
-         "practice what it preaches" requirement. --}}
+         "practice what it preaches" requirement. Built in
+         App\Support\SchemaOrgBuilder, not inline — see that class's docblock
+         for why (Blade corrupts literal '@context'/'@type' keys). --}}
     <script type="application/ld+json">
-        {!! json_encode([
-            '@context' => 'https://schema.org',
-            '@type' => 'Organization',
-            'name' => 'divin.ai',
-            'url' => url('/'),
-            'description' => 'An open, AI-engine-agnostic business registry that publishes verified, structured business profiles crawlable by every major AI engine.',
-        ], JSON_UNESCAPED_SLASHES) !!}
+        {!! json_encode(\App\Support\SchemaOrgBuilder::organization(), JSON_UNESCAPED_SLASHES) !!}
     </script>
 
     @stack('schema')

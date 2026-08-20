@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BusinessProfile;
 use Illuminate\Http\Response;
 
 class SystemController extends Controller
@@ -77,8 +78,14 @@ class SystemController extends Controller
             }
         }
 
-        // Phase 2 appends published BusinessProfile /p/{slug} URLs here once
-        // that table exists — see plan §2 Phase 2.
+        $profileSlugs = BusinessProfile::published()->pluck('slug');
+
+        foreach ($locales as $locale) {
+            foreach ($profileSlugs as $slug) {
+                $urls[] = url("/{$locale}/p/{$slug}");
+            }
+        }
+
         $xml = view('sitemap', ['urls' => array_unique($urls)])->render();
 
         return response($xml, 200)->header('Content-Type', 'application/xml');

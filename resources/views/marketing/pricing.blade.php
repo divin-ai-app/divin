@@ -3,17 +3,11 @@
 @section('title', 'Pricing — divin.ai')
 @section('description', 'Registered vs Managed — simple annual pricing for a verified, monitored AI-crawlable business profile.')
 
+{{-- See App\Support\SchemaOrgBuilder's docblock for why this JSON is built
+     in PHP, not inline here (Blade corrupts literal '@context'/'@type' keys). --}}
 @push('schema')
     <script type="application/ld+json">
-        {!! json_encode([
-            '@context' => 'https://schema.org',
-            '@type' => 'FAQPage',
-            'mainEntity' => collect($faqs)->map(fn ($faq) => [
-                '@type' => 'Question',
-                'name' => $faq['q'],
-                'acceptedAnswer' => ['@type' => 'Answer', 'text' => $faq['a']],
-            ])->all(),
-        ], JSON_UNESCAPED_SLASHES) !!}
+        {!! json_encode(\App\Support\SchemaOrgBuilder::faqPage($faqs), JSON_UNESCAPED_SLASHES) !!}
     </script>
 @endpush
 
