@@ -178,32 +178,58 @@ class DashboardController extends Controller
         ]);
     }
 
+    /**
+     * Each discrepancy inside a log is resolved independently — a single
+     * check can flag several fields at once (e.g. phone AND website), and
+     * an owner may want to accept one while keeping another. Only once
+     * every discrepancy in the log has its own resolution does the log
+     * itself get marked resolved (drives the "Needs your review" list).
+     */
     public function resolveFreshness(string $locale, BusinessProfile $profile, FreshnessCheckLog $freshnessCheckLog, Request $request): RedirectResponse
     {
         abort_unless($freshnessCheckLog->profile_id === $profile->id, 404);
         abort_if($freshnessCheckLog->resolved_at !== null, 404);
 
         $data = $request->validate([
+            'field' => ['required', 'string'],
             'action' => ['required', Rule::enum(ResolutionAction::class)],
         ]);
         $action = ResolutionAction::from($data['action']);
 
-        if ($action === ResolutionAction::AcceptedNewValue) {
-            $updates = collect($freshnessCheckLog->discrepancies)
-                ->mapWithKeys(fn (array $d) => [$d['field'] => $d['source_value']])
-                ->all();
+        $discrepancies = $freshnessCheckLog->discrepancies;
+        $matched = false;
 
-            $profile->update($updates);
+        foreach ($discrepancies as &$discrepancy) {
+            if ($discrepancy['field'] !== $data['field'] || ! empty($discrepancy['resolution'] ?? null)) {
+                continue;
+            }
+
+            $matched = true;
+            $discrepancy['resolution'] = $action->value;
+
+            if ($action === ResolutionAction::AcceptedNewValue) {
+                $profile->update([$discrepancy['field'] => $discrepancy['source_value']]);
+            }
+
+            break;
+        }
+        unset($discrepancy);
+
+        abort_unless($matched, 404);
+
+        $freshnessCheckLog->discrepancies = $discrepancies;
+
+        $resolutions = collect($discrepancies)->pluck('resolution');
+        if ($resolutions->every(fn ($r) => ! empty($r))) {
+            $freshnessCheckLog->resolved_at = now();
+            $freshnessCheckLog->resolution_action = $resolutions->unique()->count() === 1 ? $resolutions->first() : null;
         }
 
-        $freshnessCheckLog->update([
-            'resolved_at' => now(),
-            'resolution_action' => $action,
-        ]);
+        $freshnessCheckLog->save();
 
         return back()->with('status', $action === ResolutionAction::AcceptedNewValue
-            ? 'Updated — the new values are now live on your profile.'
-            : 'Kept your current values — no changes made.');
+            ? 'Updated — the new value is now live on your profile.'
+            : 'Kept your current value — no changes made.');
     }
 
     /** Available on both paid tiers once verified — chart built from CrawlerVisitDailyAgg. */

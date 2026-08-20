@@ -29,7 +29,7 @@ class FreshnessChecker
     ];
 
     /**
-     * @return array<int, array{field: string, label: string, current_value: ?string, source_value: string}>
+     * @return array<int, array{field: string, label: string, current_value: ?string, source_value: string, resolution: ?string}>
      */
     public static function compare(BusinessProfile $profile, DataSource $dataSource): array
     {
@@ -50,6 +50,8 @@ class FreshnessChecker
                     'label' => self::label($field),
                     'current_value' => $currentValue !== '' ? $currentValue : null,
                     'source_value' => $sourceValue,
+                    // Resolved per-field, independently — see DashboardController::resolveFreshness.
+                    'resolution' => null,
                 ];
             }
         }

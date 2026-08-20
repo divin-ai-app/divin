@@ -52,7 +52,7 @@ class FreshnessAndCrawlerTest extends TestCase
         ]);
 
         $this->actingAs($owner)
-            ->put("/en/dashboard/{$profile->slug}/freshness/{$log->id}", ['action' => 'accepted_new_value'])
+            ->put("/en/dashboard/{$profile->slug}/freshness/{$log->id}", ['field' => 'phone', 'action' => 'accepted_new_value'])
             ->assertRedirect();
 
         $this->assertSame('+230 222 2222', $profile->fresh()->phone);
@@ -78,11 +78,57 @@ class FreshnessAndCrawlerTest extends TestCase
         ]);
 
         $this->actingAs($owner)
-            ->put("/en/dashboard/{$profile->slug}/freshness/{$log->id}", ['action' => 'kept_current_value'])
+            ->put("/en/dashboard/{$profile->slug}/freshness/{$log->id}", ['field' => 'phone', 'action' => 'kept_current_value'])
             ->assertRedirect();
 
         $this->assertSame('+230 111 1111', $profile->fresh()->phone);
         $this->assertSame(ResolutionAction::KeptCurrentValue, $log->fresh()->resolution_action);
+    }
+
+    public function test_owner_can_resolve_multiple_discrepancies_in_a_log_independently(): void
+    {
+        $owner = User::factory()->create();
+        $profile = BusinessProfile::factory()->create([
+            'country_code' => 'MU',
+            'plan_tier' => PlanTier::Managed,
+            'phone' => '+230 111 1111',
+            'website' => null,
+        ]);
+        ProfileOwnership::factory()->create(['user_id' => $owner->id, 'profile_id' => $profile->id]);
+        $log = FreshnessCheckLog::factory()->create([
+            'profile_id' => $profile->id,
+            'discrepancies' => [
+                ['field' => 'phone', 'label' => 'Phone', 'current_value' => '+230 111 1111', 'source_value' => '+230 222 2222', 'resolution' => null],
+                ['field' => 'website', 'label' => 'Website', 'current_value' => null, 'source_value' => 'https://example.mu', 'resolution' => null],
+            ],
+        ]);
+
+        // Keep the phone as-is.
+        $this->actingAs($owner)
+            ->put("/en/dashboard/{$profile->slug}/freshness/{$log->id}", ['field' => 'phone', 'action' => 'kept_current_value'])
+            ->assertRedirect();
+
+        $this->assertSame('+230 111 1111', $profile->fresh()->phone);
+        $this->assertNull($log->fresh()->resolved_at, 'log should stay open until every field is resolved');
+
+        // Accept the website.
+        $this->actingAs($owner)
+            ->put("/en/dashboard/{$profile->slug}/freshness/{$log->id}", ['field' => 'website', 'action' => 'accepted_new_value'])
+            ->assertRedirect();
+
+        $profile->refresh();
+        $log->refresh();
+        $this->assertSame('https://example.mu', $profile->website);
+        $this->assertSame('+230 111 1111', $profile->phone);
+        $this->assertNotNull($log->resolved_at);
+        $this->assertNull($log->resolution_action, 'mixed resolutions should not collapse to a single action');
+
+        // The phone was already resolved — re-submitting it must 404, not silently overwrite.
+        $this->actingAs($owner)
+            ->put("/en/dashboard/{$profile->slug}/freshness/{$log->id}", ['field' => 'phone', 'action' => 'accepted_new_value'])
+            ->assertNotFound();
+
+        $this->assertSame('+230 111 1111', $profile->fresh()->phone);
     }
 
     public function test_cannot_resolve_another_profiles_freshness_log(): void
