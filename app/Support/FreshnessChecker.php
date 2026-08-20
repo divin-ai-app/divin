@@ -2,6 +2,7 @@
 
 namespace App\Support;
 
+use App\Enums\CoherenceStatus;
 use App\Enums\FreshnessSeverity;
 use App\Models\BusinessProfile;
 use App\Models\DataSource;
@@ -72,6 +73,20 @@ class FreshnessChecker
             in_array(FreshnessSeverity::Medium, $severities, true) => FreshnessSeverity::Medium,
             default => FreshnessSeverity::Low,
         };
+    }
+
+    /**
+     * The single source of truth for turning a severity into a DataSource's
+     * coherence_status — used by both CheckFreshness (the real periodic
+     * check) and DatabaseSeeder's demo data, so the two can never disagree
+     * about what a given severity means (they did once — a hardcoded
+     * seeded status didn't match the severity shown on the log itself).
+     */
+    public static function coherenceStatusFor(FreshnessSeverity $severity): CoherenceStatus
+    {
+        return $severity === FreshnessSeverity::High
+            ? CoherenceStatus::MajorDrift
+            : CoherenceStatus::MinorDrift;
     }
 
     private static function label(string $field): string

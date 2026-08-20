@@ -201,21 +201,29 @@ class DatabaseSeeder extends Seeder
                         'description_short' => $drifted->description_short,
                     ],
                     'last_checked_at' => now()->subDay(),
-                    'coherence_status' => CoherenceStatus::MinorDrift,
                 ],
             );
 
-            if (! $dataSource->freshnessLogs()->exists()) {
-                $discrepancies = FreshnessChecker::compare($drifted, $dataSource);
+            $discrepancies = FreshnessChecker::compare($drifted, $dataSource);
 
-                if ($discrepancies !== []) {
+            // Derive coherence_status from the discrepancies the exact same
+            // way App\Console\Commands\CheckFreshness does — a hardcoded
+            // status here previously drifted out of sync with the severity
+            // shown on the log itself (found via live testing on production).
+            if ($discrepancies !== []) {
+                $severity = FreshnessChecker::severityFor($discrepancies);
+                $dataSource->update(['coherence_status' => FreshnessChecker::coherenceStatusFor($severity)]);
+
+                if (! $dataSource->freshnessLogs()->exists()) {
                     $dataSource->freshnessLogs()->create([
                         'profile_id' => $drifted->id,
                         'checked_at' => now()->subDay(),
                         'discrepancies' => $discrepancies,
-                        'severity' => FreshnessChecker::severityFor($discrepancies),
+                        'severity' => $severity,
                     ]);
                 }
+            } else {
+                $dataSource->update(['coherence_status' => CoherenceStatus::Aligned]);
             }
         }
 

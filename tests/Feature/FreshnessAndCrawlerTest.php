@@ -245,7 +245,7 @@ class FreshnessAndCrawlerTest extends TestCase
             'address_line1' => 'Old Address',
         ]);
         ProfileOwnership::factory()->create(['user_id' => $owner->id, 'profile_id' => $profile->id]);
-        DataSource::factory()->create([
+        $dataSource = DataSource::factory()->create([
             'profile_id' => $profile->id,
             'source_type' => SourceType::Facebook,
             'current_snapshot' => ['phone' => '+230 999 9999', 'address_line1' => 'Old Address'],
@@ -253,8 +253,14 @@ class FreshnessAndCrawlerTest extends TestCase
 
         Artisan::call('freshness:check');
 
-        $this->assertDatabaseHas('freshness_check_logs', ['profile_id' => $profile->id]);
+        $this->assertDatabaseHas('freshness_check_logs', ['profile_id' => $profile->id, 'severity' => 'high']);
         Mail::assertSent(FreshnessAlertMail::class, 1);
+
+        // A "high" severity discrepancy (phone) must produce "major_drift" —
+        // these two are computed from the same severity via
+        // FreshnessChecker::coherenceStatusFor() and must never disagree
+        // (a hardcoded seeded value once drifted out of sync with this).
+        $this->assertSame(CoherenceStatus::MajorDrift, $dataSource->fresh()->coherence_status);
 
         // Re-running while the log is still unresolved must not re-alert.
         Artisan::call('freshness:check');

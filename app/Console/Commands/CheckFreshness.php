@@ -51,9 +51,7 @@ class CheckFreshness extends Command
 
                 $dataSource->update([
                     'last_checked_at' => now(),
-                    'coherence_status' => $severity->value === 'high'
-                        ? CoherenceStatus::MajorDrift
-                        : CoherenceStatus::MinorDrift,
+                    'coherence_status' => FreshnessChecker::coherenceStatusFor($severity),
                 ]);
 
                 $alreadyOpen = $dataSource->freshnessLogs()->whereNull('resolved_at')->exists();
