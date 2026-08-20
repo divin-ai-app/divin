@@ -19,18 +19,28 @@
             </div>
         @else
             @php
+                // Pixel heights computed here, not CSS percentages: a
+                // percentage height only resolves against an ancestor with
+                // an explicit height, and the immediate parent below is
+                // auto-height (items-end doesn't stretch it) — every bar
+                // silently rendered at ~the same height regardless of its
+                // actual count. Spotted via live testing on production.
+                $chartHeightPx = 120;
                 $max = max($dailyByBot->max() ?: 0, 1);
             @endphp
 
             <div class="mt-6 rounded-xl border border-ink-200 bg-white p-6">
                 <p class="text-sm font-semibold text-ink-900">Last 14 days</p>
 
-                <div class="mt-4 flex items-end gap-2" style="height: 140px;">
+                <div class="mt-4 flex items-end gap-2" style="height: {{ $chartHeightPx + 40 }}px;">
                     @foreach ($days as $date)
-                        @php $count = $dailyByBot[$date] ?? 0; @endphp
+                        @php
+                            $count = $dailyByBot[$date] ?? 0;
+                            $barHeightPx = $count > 0 ? max((int) round($count / $max * $chartHeightPx), 4) : 0;
+                        @endphp
                         <div class="flex flex-1 flex-col items-center justify-end gap-1" title="{{ $date }}: {{ $count }} visit(s)">
                             <span class="text-xs text-ink-400">{{ $count > 0 ? $count : '' }}</span>
-                            <div class="w-full rounded-t bg-accent/80" style="height: {{ max((int) round($count / $max * 100), $count > 0 ? 6 : 0) }}%; min-height: {{ $count > 0 ? '4px' : '0' }};"></div>
+                            <div class="w-full rounded-t bg-accent/80" style="height: {{ $barHeightPx }}px;"></div>
                             <span class="text-[10px] text-ink-400">{{ \Illuminate\Support\Carbon::parse($date)->format('d/m') }}</span>
                         </div>
                     @endforeach
