@@ -16,7 +16,7 @@
                 <label for="q" class="sr-only">Business name or location</label>
                 <input type="text" name="q" id="q" value="{{ $result['query'] ?? '' }}"
                        placeholder="Business name and location"
-                       class="w-full rounded-lg border-0 px-5 py-4 text-ink-900 placeholder:text-ink-400 focus:ring-2 focus:ring-accent focus:outline-none">
+                       class="w-full rounded-lg border-0 bg-white px-5 py-4 text-ink-900 placeholder:text-ink-400 focus:ring-2 focus:ring-accent focus:outline-none">
                 <button type="submit"
                         class="shrink-0 rounded-lg bg-accent px-8 py-4 font-semibold text-white transition hover:bg-accent-600">
                     Search

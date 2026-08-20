@@ -4,6 +4,11 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="index, follow">
+    {{-- No dark theme exists yet — without this, browsers with OS/browser
+         dark mode enabled render native form controls (inputs, textareas)
+         with a dark background by default, regardless of any text-color
+         utility class, making typed text invisible on unstyled fields. --}}
+    <meta name="color-scheme" content="light">
 
     <title>@yield('title', 'divin.ai — Be discoverable when AI answers the question')</title>
     <meta name="description" content="@yield('description', 'divin.ai auto-generates and verifies structured business profiles so AI engines like ChatGPT, Claude, Gemini and Perplexity can find and cite your business.')">
