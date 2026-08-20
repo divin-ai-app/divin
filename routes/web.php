@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ClaimController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MarketingController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SystemController;
@@ -34,4 +37,31 @@ Route::prefix('{locale}')
         Route::get('/claim', [MarketingController::class, 'claim'])->name('claim');
 
         Route::get('/p/{profile}', [ProfileController::class, 'show'])->name('profile.show');
+
+        // --- Account login (magic-link) — see AuthController's docblock ---
+        Route::middleware('guest')->group(function (): void {
+            Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+            Route::post('/login', [AuthController::class, 'sendLoginLink'])
+                ->middleware('throttle:6,1')
+                ->name('login.send');
+            Route::get('/verify-request', [AuthController::class, 'verifyRequest'])->name('verify-request');
+            Route::get('/login/{token}', [AuthController::class, 'consume'])->name('login.consume');
+        });
+        Route::post('/logout', [AuthController::class, 'logout'])
+            ->middleware('auth')
+            ->name('logout');
+
+        // --- Claim flow (ownership verification) — see ClaimController's docblock ---
+        Route::middleware('auth')->prefix('claim/{profile}')->name('claim.')->group(function (): void {
+            Route::get('/', [ClaimController::class, 'show'])->name('show');
+            Route::post('/otp/verify', [ClaimController::class, 'verifyOtp'])->middleware('throttle:10,1')->name('otp.verify');
+            Route::post('/otp/resend', [ClaimController::class, 'resendOtp'])->middleware('throttle:3,1')->name('otp.resend');
+            Route::post('/document', [ClaimController::class, 'submitDocumentClaim'])->name('document.submit');
+            Route::get('/plan', [ClaimController::class, 'plan'])->name('plan');
+            Route::post('/checkout', [ClaimController::class, 'checkout'])->name('checkout');
+            Route::get('/confirmation', [ClaimController::class, 'confirmation'])->name('confirmation');
+        });
+
+        // --- Dashboard shell (Phase 4 builds this out fully) ---
+        Route::middleware('auth')->get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
     });

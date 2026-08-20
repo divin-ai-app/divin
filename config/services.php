@@ -47,4 +47,11 @@ return [
         'secret' => env('CRON_SECRET'),
     ],
 
+    'stripe' => [
+        'secret' => env('STRIPE_SECRET_KEY'),
+        'webhook_secret' => env('STRIPE_WEBHOOK_SECRET'),
+        'price_registered' => env('STRIPE_PRICE_ID_REGISTERED'),
+        'price_managed' => env('STRIPE_PRICE_ID_MANAGED'),
+    ],
+
 ];

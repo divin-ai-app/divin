@@ -47,4 +47,25 @@ class ClaimRequest extends Model
     {
         return $this->hasMany(ClaimAuditEvent::class);
     }
+
+    /** Generates a 6-digit code, storing only its hash — returns the raw code to email. */
+    public function issueOtp(int $minutesValid = 15): string
+    {
+        $code = (string) random_int(100000, 999999);
+
+        $this->forceFill([
+            'otp_hash' => hash('sha256', $code),
+            'otp_expires_at' => now()->addMinutes($minutesValid),
+        ])->save();
+
+        return $code;
+    }
+
+    public function otpMatches(string $code): bool
+    {
+        return $this->otp_hash
+            && $this->otp_expires_at
+            && $this->otp_expires_at->isFuture()
+            && hash_equals($this->otp_hash, hash('sha256', $code));
+    }
 }

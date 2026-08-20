@@ -19,6 +19,13 @@ return Application::configure(basePath: dirname(__DIR__))
             'locale' => SetLocaleFromRoute::class,
             'ingestion.key' => VerifyIngestionKey::class,
         ]);
+
+        // Login lives at the locale-scoped `marketing.login`, not the
+        // conventional bare `login` route name the `auth` middleware
+        // defaults to — send guests there, preserving their current locale.
+        $middleware->redirectGuestsTo(fn (Request $request) => route('marketing.login', [
+            'locale' => $request->route('locale') ?? config('locales.default'),
+        ]));
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(

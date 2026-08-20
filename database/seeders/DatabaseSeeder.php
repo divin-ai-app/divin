@@ -91,6 +91,12 @@ class DatabaseSeeder extends Seeder
                     'city' => $definition['city'],
                     'address_line1' => $definition['address'],
                     'phone' => $definition['phone'],
+                    // Only this one flagship demo profile has an on-file public
+                    // email, so it's the one that exercises the OTP claim path
+                    // end-to-end (delivered to a real, checkable inbox); every
+                    // other seeded profile has none, so claiming them exercises
+                    // the document-upload fallback path instead. See plan §4.
+                    'public_email' => $definition['slug'] === 'coral-bay-guesthouse' ? 'hello@divin.ai' : null,
                     'description_short' => $definition['description'],
                     'hours' => $definition['hours'],
                     'price_range' => $definition['price_range'],

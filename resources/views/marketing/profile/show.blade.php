@@ -30,7 +30,7 @@
                     <p class="text-white">
                         <strong>Is this your business?</strong> Claim this profile to verify and enrich it.
                     </p>
-                    <a href="{{ lroute('marketing.claim') }}"
+                    <a href="{{ lroute('marketing.claim.show', ['profile' => $profile->slug]) }}"
                        class="mt-4 inline-block rounded-lg bg-accent px-6 py-3 text-sm font-semibold text-white transition hover:bg-accent-600">
                         Claim this business
                     </a>
