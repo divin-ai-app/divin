@@ -62,6 +62,28 @@ Route::prefix('{locale}')
             Route::get('/confirmation', [ClaimController::class, 'confirmation'])->name('confirmation');
         });
 
-        // --- Dashboard shell (Phase 4 builds this out fully) ---
-        Route::middleware('auth')->get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
+        // --- Dashboard (Phase 4) — every {profile} route requires ownership
+        // (BusinessProfilePolicy@manage), not just login.
+        Route::middleware('auth')->prefix('dashboard')->name('dashboard.')->group(function (): void {
+            Route::get('/', [DashboardController::class, 'index'])->name('index');
+
+            Route::middleware('can:manage,profile')->prefix('{profile}')->group(function (): void {
+                Route::get('/', [DashboardController::class, 'overview'])->name('overview');
+
+                Route::get('/edit', [DashboardController::class, 'edit'])->name('edit');
+                Route::put('/edit', [DashboardController::class, 'update'])->name('update');
+                Route::post('/services', [DashboardController::class, 'storeService'])->name('services.store');
+                Route::delete('/services/{service}', [DashboardController::class, 'destroyService'])->name('services.destroy');
+                Route::post('/images', [DashboardController::class, 'storeImage'])->name('images.store');
+                Route::delete('/images/{image}', [DashboardController::class, 'destroyImage'])->name('images.destroy');
+
+                Route::get('/billing', [DashboardController::class, 'billing'])->name('billing');
+
+                Route::get('/settings', [DashboardController::class, 'settings'])->name('settings');
+                Route::put('/settings', [DashboardController::class, 'updateSettings'])->name('settings.update');
+
+                Route::get('/freshness', [DashboardController::class, 'freshness'])->name('freshness');
+                Route::get('/crawler-activity', [DashboardController::class, 'crawlerActivity'])->name('crawler-activity');
+            });
+        });
     });
