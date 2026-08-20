@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\BotName;
 use App\Enums\PlanTier;
+use App\Enums\ResolutionAction;
 use App\Models\BusinessProfile;
+use App\Models\CrawlerVisitDailyAgg;
+use App\Models\FreshnessCheckLog;
 use App\Models\ProfileImage;
 use App\Models\ProfileService;
 use Illuminate\Contracts\View\View;
@@ -12,6 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 /**
  * The owner-facing dashboard (Phase 4 — see plan §7). Every {profile}-scoped
@@ -150,22 +155,108 @@ class DashboardController extends Controller
         return back()->with('status', 'Settings updated.');
     }
 
-    /** Managed-tier only — real content lands in Phase 6; this enforces the gate now. */
+    /** Managed-tier only — compares the profile against its DataSources; see App\Console\Commands\CheckFreshness. */
     public function freshness(string $locale, BusinessProfile $profile): View
     {
+        $unlocked = $profile->plan_tier === PlanTier::Managed;
+
+        $openLogs = collect();
+        $resolvedLogs = collect();
+
+        if ($unlocked) {
+            $profile->load('dataSources');
+
+            $openLogs = $profile->freshnessLogs()->whereNull('resolved_at')->with('dataSource')->latest('checked_at')->get();
+            $resolvedLogs = $profile->freshnessLogs()->whereNotNull('resolved_at')->with('dataSource')->latest('resolved_at')->take(5)->get();
+        }
+
         return view('dashboard.freshness', [
             'profile' => $profile,
-            'unlocked' => $profile->plan_tier === PlanTier::Managed,
+            'unlocked' => $unlocked,
+            'openLogs' => $openLogs,
+            'resolvedLogs' => $resolvedLogs,
         ]);
     }
 
-    /** Available on both paid tiers — real data lands in Phase 6; placeholder for now. */
+    public function resolveFreshness(string $locale, BusinessProfile $profile, FreshnessCheckLog $freshnessCheckLog, Request $request): RedirectResponse
+    {
+        abort_unless($freshnessCheckLog->profile_id === $profile->id, 404);
+        abort_if($freshnessCheckLog->resolved_at !== null, 404);
+
+        $data = $request->validate([
+            'action' => ['required', Rule::enum(ResolutionAction::class)],
+        ]);
+        $action = ResolutionAction::from($data['action']);
+
+        if ($action === ResolutionAction::AcceptedNewValue) {
+            $updates = collect($freshnessCheckLog->discrepancies)
+                ->mapWithKeys(fn (array $d) => [$d['field'] => $d['source_value']])
+                ->all();
+
+            $profile->update($updates);
+        }
+
+        $freshnessCheckLog->update([
+            'resolved_at' => now(),
+            'resolution_action' => $action,
+        ]);
+
+        return back()->with('status', $action === ResolutionAction::AcceptedNewValue
+            ? 'Updated — the new values are now live on your profile.'
+            : 'Kept your current values — no changes made.');
+    }
+
+    /** Available on both paid tiers once verified — chart built from CrawlerVisitDailyAgg. */
     public function crawlerActivity(string $locale, BusinessProfile $profile): View
     {
+        $unlocked = $profile->plan_tier !== PlanTier::None;
+
+        $dailyByBot = collect();
+        $totalsByBot = collect();
+        $days = collect();
+
+        if ($unlocked) {
+            $since = now()->subDays(13)->startOfDay();
+            $days = collect(range(0, 13))->map(fn ($i) => now()->subDays(13 - $i)->toDateString());
+
+            $aggs = $profile->crawlerVisitsDaily()->where('date', '>=', $since)->get();
+
+            // Group by an explicit toDateString(), not a bare ->where('date',
+            // $string) collection filter: $agg->date is a Carbon instance
+            // (the 'date' cast), and comparing it against a plain string
+            // never matches, so every bucket would silently read zero.
+            $byDate = $aggs->groupBy(fn ($agg) => $agg->date->toDateString());
+
+            $dailyByBot = $days->mapWithKeys(fn ($date) => [
+                $date => ($byDate->get($date) ?? collect())->sum('visit_count'),
+            ]);
+
+            $totalsByBot = $aggs->groupBy(fn ($agg) => $agg->bot_name->value)
+                ->map(fn ($group) => $group->sum('visit_count'))
+                ->sortDesc();
+        }
+
         return view('dashboard.crawler-activity', [
             'profile' => $profile,
-            'unlocked' => $profile->plan_tier !== PlanTier::None,
+            'unlocked' => $unlocked,
+            'days' => $days,
+            'dailyByBot' => $dailyByBot,
+            'totalsByBot' => $totalsByBot,
         ]);
+    }
+
+    /**
+     * Demo/testing helper, clearly labeled as such in the UI — a brand-new
+     * site has no real bot traffic yet to show off the chart with. Real
+     * visits are logged for real by App\Http\Middleware\LogCrawlerVisit.
+     */
+    public function simulateCrawlerVisit(string $locale, BusinessProfile $profile): RedirectResponse
+    {
+        $bot = collect(BotName::cases())->random();
+
+        CrawlerVisitDailyAgg::incrementFor($profile->id, now()->toDateString(), $bot);
+
+        return back()->with('status', "Simulated a visit from {$bot->value}.");
     }
 
     private function normalizeHours(Request $request): array

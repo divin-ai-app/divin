@@ -43,7 +43,7 @@ Route::prefix('{locale}')
         Route::post('/contact', [MarketingController::class, 'submitContact'])->name('contact.submit');
         Route::get('/claim', [MarketingController::class, 'claim'])->name('claim');
 
-        Route::get('/p/{profile}', [ProfileController::class, 'show'])->name('profile.show');
+        Route::get('/p/{profile}', [ProfileController::class, 'show'])->middleware('crawler.log')->name('profile.show');
         Route::get('/p/{profile}/report', [ProfileController::class, 'report'])->name('profile.report');
         Route::post('/p/{profile}/report', [ProfileController::class, 'submitReport'])
             ->middleware('throttle:5,1')
@@ -94,7 +94,10 @@ Route::prefix('{locale}')
                 Route::put('/settings', [DashboardController::class, 'updateSettings'])->name('settings.update');
 
                 Route::get('/freshness', [DashboardController::class, 'freshness'])->name('freshness');
+                Route::put('/freshness/{freshnessCheckLog}', [DashboardController::class, 'resolveFreshness'])->name('freshness.resolve');
+
                 Route::get('/crawler-activity', [DashboardController::class, 'crawlerActivity'])->name('crawler-activity');
+                Route::post('/crawler-activity/simulate', [DashboardController::class, 'simulateCrawlerVisit'])->name('crawler-activity.simulate');
             });
         });
 

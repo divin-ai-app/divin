@@ -2,8 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Enums\BotName;
 use App\Enums\ClaimRequestStatus;
 use App\Enums\ClaimStatus;
+use App\Enums\CoherenceStatus;
 use App\Enums\DisputeStatus;
 use App\Enums\DisputeType;
 use App\Enums\Industry;
@@ -11,15 +13,19 @@ use App\Enums\LegalStatus;
 use App\Enums\PlanTier;
 use App\Enums\ProfileStatus;
 use App\Enums\Role;
+use App\Enums\SourceType;
 use App\Enums\SubscriptionStatus;
 use App\Enums\VerificationMethod;
 use App\Models\BusinessProfile;
 use App\Models\ClaimRequest;
 use App\Models\CountryClearance;
+use App\Models\CrawlerVisitDailyAgg;
+use App\Models\DataSource;
 use App\Models\Dispute;
 use App\Models\ProfileOwnership;
 use App\Models\Subscription;
 use App\Models\User;
+use App\Support\FreshnessChecker;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
@@ -37,6 +43,8 @@ class DatabaseSeeder extends Seeder
         $demoOwner = $this->seedDemoUsers();
         $this->seedBusinessProfiles($demoOwner);
         $this->seedAdminQueueSamples($demoOwner);
+        $this->seedFreshnessSamples();
+        $this->seedCrawlerVisitSamples();
     }
 
     private function seedCountryClearances(): void
@@ -167,6 +175,91 @@ class DatabaseSeeder extends Seeder
                 'description' => 'The listed opening hours are wrong — this business is now closed on Sundays.',
                 'status' => DisputeStatus::Open,
             ]);
+        }
+    }
+
+    /**
+     * Phase 6 demo data: one Managed profile with a data source that's
+     * genuinely drifted (so the freshness report has something real to
+     * show without waiting on `php artisan freshness:check` to run), and
+     * one with a source that's already aligned, for contrast.
+     */
+    private function seedFreshnessSamples(): void
+    {
+        $drifted = BusinessProfile::query()->where('slug', 'port-louis-eye-institute')->first();
+
+        if ($drifted) {
+            $dataSource = DataSource::query()->updateOrCreate(
+                ['profile_id' => $drifted->id, 'source_type' => SourceType::Facebook],
+                [
+                    'source_url' => 'https://facebook.com/portlouiseyeinstitute',
+                    'current_snapshot' => [
+                        'name' => $drifted->name,
+                        'phone' => '+230 208 7799',
+                        'address_line1' => $drifted->address_line1,
+                        'website' => 'https://portlouiseye.mu',
+                        'description_short' => $drifted->description_short,
+                    ],
+                    'last_checked_at' => now()->subDay(),
+                    'coherence_status' => CoherenceStatus::MinorDrift,
+                ],
+            );
+
+            if (! $dataSource->freshnessLogs()->exists()) {
+                $discrepancies = FreshnessChecker::compare($drifted, $dataSource);
+
+                if ($discrepancies !== []) {
+                    $dataSource->freshnessLogs()->create([
+                        'profile_id' => $drifted->id,
+                        'checked_at' => now()->subDay(),
+                        'discrepancies' => $discrepancies,
+                        'severity' => FreshnessChecker::severityFor($discrepancies),
+                    ]);
+                }
+            }
+        }
+
+        $aligned = BusinessProfile::query()->where('slug', 'mahebourg-heritage-inn')->first();
+
+        if ($aligned) {
+            DataSource::query()->updateOrCreate(
+                ['profile_id' => $aligned->id, 'source_type' => SourceType::OwnWebsite],
+                [
+                    'source_url' => 'https://mahebourgheritageinn.mu',
+                    'current_snapshot' => [
+                        'name' => $aligned->name,
+                        'phone' => $aligned->phone,
+                        'address_line1' => $aligned->address_line1,
+                        'description_short' => $aligned->description_short,
+                    ],
+                    'last_checked_at' => now()->subHours(6),
+                    'coherence_status' => CoherenceStatus::Aligned,
+                ],
+            );
+        }
+    }
+
+    /** Phase 6 demo data: a sparse, realistic-looking 7-day crawler visit history. */
+    private function seedCrawlerVisitSamples(): void
+    {
+        $profiles = BusinessProfile::query()
+            ->whereIn('plan_tier', [PlanTier::Registered, PlanTier::Managed])
+            ->orderBy('id')
+            ->take(3)
+            ->get();
+
+        $bots = [BotName::GptBot, BotName::ClaudeBot, BotName::PerplexityBot, BotName::Googlebot];
+
+        foreach ($profiles as $profile) {
+            foreach (range(0, 6) as $daysAgo) {
+                foreach ($bots as $bot) {
+                    if (random_int(0, 1) === 0) {
+                        continue;
+                    }
+
+                    CrawlerVisitDailyAgg::incrementFor($profile->id, now()->subDays($daysAgo)->toDateString(), $bot, random_int(1, 6));
+                }
+            }
         }
     }
 

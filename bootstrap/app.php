@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\EnsureIsStaff;
+use App\Http\Middleware\LogCrawlerVisit;
 use App\Http\Middleware\SetLocaleFromRoute;
 use App\Http\Middleware\VerifyIngestionKey;
 use Illuminate\Foundation\Application;
@@ -20,6 +21,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'locale' => SetLocaleFromRoute::class,
             'ingestion.key' => VerifyIngestionKey::class,
             'staff' => EnsureIsStaff::class,
+            'crawler.log' => LogCrawlerVisit::class,
         ]);
 
         // Login lives at the locale-scoped `marketing.login`, not the
