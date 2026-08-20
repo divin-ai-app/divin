@@ -48,7 +48,7 @@
                                    class="w-48 rounded-lg border border-ink-200 bg-white px-2 py-1.5 text-sm text-ink-900 focus:border-accent focus:ring-accent">
                         </td>
                         <td class="px-4 py-3">
-                            <button type="submit" form="{{ $formId }}" class="rounded-lg bg-accent px-3 py-1.5 text-sm font-semibold text-white hover:bg-accent-600">
+                            <button type="submit" form="{{ $formId }}" class="rounded-lg bg-accent-700 px-3 py-1.5 text-sm font-semibold text-white hover:bg-accent-800">
                                 Save
                             </button>
                             <form id="{{ $formId }}" method="POST" action="{{ lroute('marketing.admin.country-clearance.update', ['clearance' => $clearance->id]) }}">

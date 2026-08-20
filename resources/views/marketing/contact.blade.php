@@ -44,7 +44,7 @@
                 </div>
 
                 <button type="submit"
-                        class="w-full rounded-lg bg-accent px-6 py-3.5 font-semibold text-white transition hover:bg-accent-600">
+                        class="w-full rounded-lg bg-accent-700 px-6 py-3.5 font-semibold text-white transition hover:bg-accent-800">
                     Send message
                 </button>
             </form>

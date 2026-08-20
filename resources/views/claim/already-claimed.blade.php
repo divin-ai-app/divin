@@ -10,7 +10,7 @@
                 <strong>{{ $profile->name }}</strong> has already been verified by its owner. If
                 that's a mistake, let us know.
             </p>
-            <a href="{{ lroute('marketing.contact') }}" class="mt-8 inline-block font-semibold text-accent hover:text-accent-600">
+            <a href="{{ lroute('marketing.contact') }}" class="mt-8 inline-block font-semibold text-accent-700 hover:text-accent-800">
                 Contact us &rarr;
             </a>
         </div>

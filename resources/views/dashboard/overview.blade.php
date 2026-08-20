@@ -8,7 +8,7 @@
             <div>
                 <h1 class="text-2xl font-bold text-ink-900">{{ $profile->name }}</h1>
                 <a href="{{ lroute('marketing.profile.show', ['profile' => $profile->slug]) }}"
-                   class="text-sm text-accent hover:text-accent-600" target="_blank" rel="noopener">
+                   class="text-sm text-accent-700 hover:text-accent-800" target="_blank" rel="noopener">
                     View public profile &rarr;
                 </a>
             </div>
@@ -16,7 +16,7 @@
                 <span class="rounded-full bg-ink-100 px-3 py-1 text-xs font-semibold text-ink-700">
                     {{ str($profile->claim_status->value)->title() }}
                 </span>
-                <span class="rounded-full bg-accent/10 px-3 py-1 text-xs font-semibold text-accent">
+                <span class="rounded-full bg-accent/10 px-3 py-1 text-xs font-semibold text-accent-700">
                     {{ str($profile->plan_tier->value)->title() }}
                 </span>
             </div>
@@ -56,7 +56,7 @@
                 </div>
             </dl>
             <a href="{{ lroute('marketing.dashboard.edit', ['profile' => $profile->slug]) }}"
-               class="mt-6 inline-block rounded-lg bg-accent px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-accent-600">
+               class="mt-6 inline-block rounded-lg bg-accent-700 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-accent-800">
                 Edit profile
             </a>
         </div>

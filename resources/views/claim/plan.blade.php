@@ -42,7 +42,7 @@
                       class="rounded-2xl border-2 border-accent p-10">
                     @csrf
                     <input type="hidden" name="tier" value="managed">
-                    <span class="rounded-full bg-accent/10 px-3 py-1 text-xs font-semibold text-accent">Most complete</span>
+                    <span class="rounded-full bg-accent/10 px-3 py-1 text-xs font-semibold text-accent-700">Most complete</span>
                     <h2 class="mt-3 text-xl font-bold text-ink-900">Managed</h2>
                     <p class="mt-2 text-4xl font-bold text-ink-900">US$4.99<span class="text-base font-normal text-ink-500">/mo equiv.</span></p>
                     <p class="mt-1 text-sm text-ink-500">Billed annually — US$59.88/year</p>
@@ -52,7 +52,7 @@
                         <li class="flex gap-2"><span class="text-success">&check;</span> Email alerts when sources drift</li>
                     </ul>
                     <button type="submit"
-                            class="mt-8 w-full rounded-lg bg-accent px-6 py-3 font-semibold text-white transition hover:bg-accent-600">
+                            class="mt-8 w-full rounded-lg bg-accent-700 px-6 py-3 font-semibold text-white transition hover:bg-accent-800">
                         Choose Managed
                     </button>
                 </form>

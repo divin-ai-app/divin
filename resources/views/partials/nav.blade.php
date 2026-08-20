@@ -30,7 +30,7 @@
                 {{ auth()->check() ? 'Dashboard' : 'Sign in' }}
             </a>
             <a href="{{ lroute('marketing.claim') }}"
-               class="rounded-lg bg-accent px-5 py-2.5 text-sm font-semibold text-white shadow-md transition hover:bg-accent-600">
+               class="rounded-lg bg-accent-700 px-5 py-2.5 text-sm font-semibold text-white shadow-md transition hover:bg-accent-800">
                 Claim your business
             </a>
         </div>
@@ -51,7 +51,7 @@
                         {{ auth()->check() ? 'Dashboard' : 'Sign in' }}
                     </a>
                     <a href="{{ lroute('marketing.claim') }}"
-                       class="rounded-lg bg-accent px-4 py-2.5 text-center text-sm font-semibold text-white">
+                       class="rounded-lg bg-accent-700 px-4 py-2.5 text-center text-sm font-semibold text-white transition hover:bg-accent-800">
                         Claim your business
                     </a>
                 </div>

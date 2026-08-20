@@ -9,7 +9,7 @@
         @if ($profiles->isEmpty())
             <p class="mt-4 text-ink-600">
                 You haven't claimed any businesses yet.
-                <a href="{{ lroute('marketing.claim') }}" class="font-semibold text-accent hover:text-accent-600">
+                <a href="{{ lroute('marketing.claim') }}" class="font-semibold text-accent-700 hover:text-accent-800">
                     Find your business &rarr;
                 </a>
             </p>

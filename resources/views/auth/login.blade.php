@@ -25,7 +25,7 @@
                            class="mt-1.5 block w-full rounded-lg border border-ink-200 px-4 py-3 text-ink-900 focus:border-accent focus:ring-accent">
                 </div>
                 <button type="submit"
-                        class="w-full rounded-lg bg-accent px-6 py-3.5 font-semibold text-white transition hover:bg-accent-600">
+                        class="w-full rounded-lg bg-accent-700 px-6 py-3.5 font-semibold text-white transition hover:bg-accent-800">
                     Send sign-in link
                 </button>
             </form>

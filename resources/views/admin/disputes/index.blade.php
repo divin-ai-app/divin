@@ -24,7 +24,7 @@
                     </div>
 
                     <details class="relative shrink-0">
-                        <summary class="cursor-pointer list-none rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-white hover:bg-accent-600">
+                        <summary class="cursor-pointer list-none rounded-lg bg-accent-700 px-4 py-2 text-sm font-semibold text-white hover:bg-accent-800">
                             Resolve
                         </summary>
                         <form method="POST" action="{{ lroute('marketing.admin.disputes.resolve', ['dispute' => $dispute->id]) }}"
@@ -48,7 +48,7 @@
                                           class="mt-1 block w-full rounded-lg border border-ink-200 bg-white px-3 py-2 text-sm text-ink-900 focus:border-accent focus:ring-accent"></textarea>
                             </div>
 
-                            <button type="submit" class="w-full rounded-lg bg-accent px-3 py-2 text-sm font-semibold text-white hover:bg-accent-600">
+                            <button type="submit" class="w-full rounded-lg bg-accent-700 px-3 py-2 text-sm font-semibold text-white hover:bg-accent-800">
                                 Submit resolution
                             </button>
                         </form>

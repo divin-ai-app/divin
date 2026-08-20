@@ -19,7 +19,7 @@
                        placeholder="e.g. &quot;Coral Bay Guesthouse, Grand Baie&quot;"
                        class="w-full rounded-lg border-0 bg-white px-5 py-4 text-ink-900 placeholder:text-ink-400 focus:ring-2 focus:ring-accent focus:outline-none">
                 <button type="submit"
-                        class="shrink-0 rounded-lg bg-accent px-8 py-4 font-semibold text-white transition hover:bg-accent-600">
+                        class="shrink-0 rounded-lg bg-accent-700 px-8 py-4 font-semibold text-white transition hover:bg-accent-800">
                     Check visibility
                 </button>
             </form>
@@ -85,7 +85,7 @@
                                 profile in minutes.
                             </p>
                             <a href="{{ lroute('marketing.claim') }}"
-                               class="mt-4 inline-block rounded-lg bg-accent px-8 py-3.5 font-semibold text-white transition hover:bg-accent-600">
+                               class="mt-4 inline-block rounded-lg bg-accent-700 px-8 py-3.5 font-semibold text-white transition hover:bg-accent-800">
                                 Create your profile
                             </a>
                         </div>

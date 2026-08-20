@@ -30,7 +30,7 @@
 
             <div class="mt-12 text-center">
                 <a href="{{ lroute('marketing.claim') }}"
-                   class="inline-block rounded-lg bg-accent px-8 py-3.5 font-semibold text-white transition hover:bg-accent-600">
+                   class="inline-block rounded-lg bg-accent-700 px-8 py-3.5 font-semibold text-white transition hover:bg-accent-800">
                     Find your {{ strtolower($industry['name']) }} business
                 </a>
             </div>

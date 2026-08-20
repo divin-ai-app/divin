@@ -14,7 +14,7 @@
     <section class="bg-white py-section-y">
         <div class="mx-auto max-w-3xl space-y-16 px-4 sm:px-6 lg:px-8">
             <div>
-                <span class="text-sm font-bold text-accent">01 — Auto-generate</span>
+                <span class="text-sm font-bold text-accent-700">01 — Auto-generate</span>
                 <h2 class="mt-2 text-2xl font-bold text-ink-900">A structured profile, built from public data</h2>
                 <p class="mt-4 text-ink-600">
                     We assemble a profile from public, non-sensitive sources — business registers,
@@ -31,7 +31,7 @@
             </div>
 
             <div>
-                <span class="text-sm font-bold text-accent">02 — Claim</span>
+                <span class="text-sm font-bold text-accent-700">02 — Claim</span>
                 <h2 class="mt-2 text-2xl font-bold text-ink-900">Verify you own it, then enrich it</h2>
                 <p class="mt-4 text-ink-600">
                     Find your business and tell us it's yours. We verify ownership — typically by
@@ -42,7 +42,7 @@
             </div>
 
             <div>
-                <span class="text-sm font-bold text-accent">03 — Monitor</span>
+                <span class="text-sm font-bold text-accent-700">03 — Monitor</span>
                 <h2 class="mt-2 text-2xl font-bold text-ink-900">Stay accurate as your other listings change</h2>
                 <p class="mt-4 text-ink-600">
                     On the Managed plan, we periodically re-check your own website, Facebook Page, and

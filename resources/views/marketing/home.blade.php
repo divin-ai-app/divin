@@ -18,7 +18,7 @@
             </p>
             <div class="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
                 <a href="{{ lroute('marketing.claim') }}"
-                   class="rounded-lg bg-accent px-8 py-4 text-base font-semibold text-white shadow-lg transition hover:bg-accent-600">
+                   class="rounded-lg bg-accent-700 px-8 py-4 text-base font-semibold text-white shadow-lg transition hover:bg-accent-800">
                     Find your business
                 </a>
                 <a href="{{ lroute('marketing.visibility-check') }}"
@@ -54,7 +54,7 @@
                     ['step' => '03', 'title' => 'Monitor', 'body' => 'On the Managed plan, we continuously check your profile against your own website, Facebook Page, and OTA listings — and alert you the moment they drift apart.'],
                 ] as $item)
                     <div class="rounded-2xl bg-white p-8 shadow-md">
-                        <span class="text-sm font-bold text-accent">{{ $item['step'] }}</span>
+                        <span class="text-sm font-bold text-accent-700">{{ $item['step'] }}</span>
                         <h3 class="mt-2 text-xl font-semibold text-ink-900">{{ $item['title'] }}</h3>
                         <p class="mt-3 text-sm text-ink-600">{{ $item['body'] }}</p>
                     </div>
@@ -80,7 +80,7 @@
                     <p class="mt-3 text-sm text-ink-600">Everything in Registered, plus ongoing freshness &amp; coherence monitoring with email alerts.</p>
                 </div>
             </div>
-            <a href="{{ lroute('marketing.pricing') }}" class="mt-8 inline-block text-sm font-semibold text-accent hover:text-accent-600">
+            <a href="{{ lroute('marketing.pricing') }}" class="mt-8 inline-block text-sm font-semibold text-accent-700 hover:text-accent-800">
                 See full pricing comparison &rarr;
             </a>
         </div>

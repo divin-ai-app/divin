@@ -15,7 +15,7 @@
                     is included on the Managed plan.
                 </p>
                 <a href="{{ lroute('marketing.claim.plan', ['profile' => $profile->slug]) }}"
-                   class="mt-5 inline-block rounded-lg bg-accent px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-accent-600">
+                   class="mt-5 inline-block rounded-lg bg-accent-700 px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-accent-800">
                     Upgrade to Managed
                 </a>
             </div>
@@ -101,7 +101,7 @@
                                                     @method('PUT')
                                                     <input type="hidden" name="field" value="{{ $d['field'] }}">
                                                     <input type="hidden" name="action" value="accepted_new_value">
-                                                    <button type="submit" class="rounded-lg bg-accent px-3 py-1.5 text-xs font-semibold text-white hover:bg-accent-600">
+                                                    <button type="submit" class="rounded-lg bg-accent-700 px-3 py-1.5 text-xs font-semibold text-white hover:bg-accent-800">
                                                         Accept
                                                     </button>
                                                 </form>

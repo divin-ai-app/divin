@@ -43,7 +43,7 @@
             </select>
         </div>
 
-        <button type="submit" class="rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-white hover:bg-accent-600">
+        <button type="submit" class="rounded-lg bg-accent-700 px-4 py-2 text-sm font-semibold text-white hover:bg-accent-800">
             Filter
         </button>
         @if (array_filter($filters))

@@ -22,7 +22,7 @@
                        class="rounded-2xl border border-ink-200 p-8 transition hover:border-accent hover:shadow-lg">
                         <h2 class="text-xl font-bold text-ink-900">{{ $industry['name'] }}</h2>
                         <p class="mt-3 text-sm text-ink-600">{{ $industry['tagline'] }}</p>
-                        <span class="mt-4 inline-block text-sm font-semibold text-accent">Learn more &rarr;</span>
+                        <span class="mt-4 inline-block text-sm font-semibold text-accent-700">Learn more &rarr;</span>
                     </a>
                 @endforeach
             </div>

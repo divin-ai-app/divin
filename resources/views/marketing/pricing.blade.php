@@ -36,7 +36,7 @@
                 </div>
 
                 <div class="rounded-2xl border-2 border-accent p-10">
-                    <span class="rounded-full bg-accent/10 px-3 py-1 text-xs font-semibold text-accent">Most complete</span>
+                    <span class="rounded-full bg-accent/10 px-3 py-1 text-xs font-semibold text-accent-700">Most complete</span>
                     <h2 class="mt-3 text-xl font-bold text-ink-900">Managed</h2>
                     <p class="mt-2 text-4xl font-bold text-ink-900">
                         US$4.99<span class="text-base font-normal text-ink-500">/mo equivalent</span>
@@ -52,7 +52,7 @@
 
             <div class="mt-12 text-center">
                 <a href="{{ lroute('marketing.claim') }}"
-                   class="inline-block rounded-lg bg-accent px-8 py-3.5 font-semibold text-white transition hover:bg-accent-600">
+                   class="inline-block rounded-lg bg-accent-700 px-8 py-3.5 font-semibold text-white transition hover:bg-accent-800">
                     Find your business to get started
                 </a>
             </div>

@@ -95,7 +95,7 @@
             </div>
 
             <button type="submit"
-                    class="mt-6 rounded-lg bg-accent px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-accent-600">
+                    class="mt-6 rounded-lg bg-accent-700 px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-accent-800">
                 Save changes
             </button>
         </form>

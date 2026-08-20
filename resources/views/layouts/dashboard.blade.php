@@ -33,7 +33,7 @@
                     @endphp
                     @foreach ($navItems as $item)
                         <a href="{{ lroute($item['route'], ['profile' => $profile->slug]) }}"
-                           class="block rounded-lg px-3 py-2 text-sm font-medium transition {{ request()->routeIs($item['route']) ? 'bg-accent/10 text-accent' : 'text-ink-600 hover:bg-ink-50 hover:text-ink-900' }}">
+                           class="block rounded-lg px-3 py-2 text-sm font-medium transition {{ request()->routeIs($item['route']) ? 'bg-accent/10 text-accent-700' : 'text-ink-600 hover:bg-ink-50 hover:text-ink-900' }}">
                             {{ $item['label'] }}
                         </a>
                     @endforeach

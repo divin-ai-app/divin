@@ -11,7 +11,7 @@
                 This usually takes a few seconds — refresh your profile page shortly to see it reflected.
             </p>
             <a href="{{ lroute('marketing.profile.show', ['profile' => $profile->slug]) }}"
-               class="mt-8 inline-block rounded-lg bg-accent px-8 py-3.5 font-semibold text-white transition hover:bg-accent-600">
+               class="mt-8 inline-block rounded-lg bg-accent-700 px-8 py-3.5 font-semibold text-white transition hover:bg-accent-800">
                 View your profile
             </a>
         </div>

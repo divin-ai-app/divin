@@ -18,7 +18,7 @@
                             @endif
                         </p>
                     </div>
-                    <span class="rounded-full bg-accent/10 px-3 py-1 text-xs font-semibold text-accent">
+                    <span class="rounded-full bg-accent/10 px-3 py-1 text-xs font-semibold text-accent-700">
                         {{ str($profile->plan_tier->value)->title() }}
                     </span>
                 </div>
@@ -30,7 +30,7 @@
                             with email alerts when your other listings drift out of sync.
                         </p>
                         <a href="{{ lroute('marketing.claim.plan', ['profile' => $profile->slug]) }}"
-                           class="mt-3 inline-block rounded-lg bg-accent px-5 py-2 text-sm font-semibold text-white transition hover:bg-accent-600">
+                           class="mt-3 inline-block rounded-lg bg-accent-700 px-5 py-2 text-sm font-semibold text-white transition hover:bg-accent-800">
                             Upgrade to Managed
                         </a>
                     </div>

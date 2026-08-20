@@ -18,7 +18,7 @@
                        placeholder="Business name and location"
                        class="w-full rounded-lg border-0 bg-white px-5 py-4 text-ink-900 placeholder:text-ink-400 focus:ring-2 focus:ring-accent focus:outline-none">
                 <button type="submit"
-                        class="shrink-0 rounded-lg bg-accent px-8 py-4 font-semibold text-white transition hover:bg-accent-600">
+                        class="shrink-0 rounded-lg bg-accent-700 px-8 py-4 font-semibold text-white transition hover:bg-accent-800">
                     Search
                 </button>
             </form>
@@ -44,7 +44,7 @@
                 @else
                     <p class="text-center text-ink-600">
                         No profile found for &ldquo;{{ $result['query'] }}&rdquo; yet.
-                        <a href="{{ lroute('marketing.contact') }}" class="font-semibold text-accent hover:text-accent-600">
+                        <a href="{{ lroute('marketing.contact') }}" class="font-semibold text-accent-700 hover:text-accent-800">
                             Contact us
                         </a>
                         to get one started.
@@ -53,7 +53,7 @@
             @else
                 <p class="text-center text-ink-600">
                     Search above, or
-                    <a href="{{ lroute('marketing.contact') }}" class="font-semibold text-accent hover:text-accent-600">
+                    <a href="{{ lroute('marketing.contact') }}" class="font-semibold text-accent-700 hover:text-accent-800">
                         contact us
                     </a>
                     if you'd rather we help directly.

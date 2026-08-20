@@ -31,14 +31,14 @@
                            class="mt-1.5 block w-full rounded-lg border border-ink-200 px-4 py-3 text-center text-2xl tracking-[0.5em] text-ink-900 focus:border-accent focus:ring-accent">
                 </div>
                 <button type="submit"
-                        class="w-full rounded-lg bg-accent px-6 py-3.5 font-semibold text-white transition hover:bg-accent-600">
+                        class="w-full rounded-lg bg-accent-700 px-6 py-3.5 font-semibold text-white transition hover:bg-accent-800">
                     Verify
                 </button>
             </form>
 
             <form method="POST" action="{{ lroute('marketing.claim.otp.resend', ['profile' => $profile->slug]) }}" class="mt-4 text-center">
                 @csrf
-                <button type="submit" class="text-sm font-semibold text-accent hover:text-accent-600">
+                <button type="submit" class="text-sm font-semibold text-accent-700 hover:text-accent-800">
                     Resend code
                 </button>
             </form>

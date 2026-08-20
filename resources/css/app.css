@@ -27,10 +27,18 @@
   --color-ink-100: #e7ecf4;
   --color-ink-50: #f5f7fb;
 
-  /* Accent — "signal orange", deliberately not a Yext-adjacent blue. */
+  /* Accent — "signal orange", deliberately not a Yext-adjacent blue.
+     accent-700 is the button/CTA default (not `accent` itself) —
+     `accent` only measures ~2.83:1 against white, well under WCAG AA's
+     4.5:1 minimum for text; accent-700 clears it at ~4.8:1. accent-800
+     is that button's hover state — darker again, since accent-700 is
+     already the darkest step that existed before this fix. `accent`
+     itself stays defined for non-text uses (small decorative dots,
+     etc.) where contrast doesn't apply. */
   --color-accent: #ff6b35;
   --color-accent-600: #e85a28;
   --color-accent-700: #c8481d;
+  --color-accent-800: #a83c17;
 
   --color-success: #16a34a;
   --color-warning: #d97706;

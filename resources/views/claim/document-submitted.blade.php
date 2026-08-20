@@ -11,7 +11,7 @@
                 review. We'll be in touch once it's confirmed, usually within a couple of business
                 days.
             </p>
-            <a href="{{ lroute('marketing.home') }}" class="mt-8 inline-block font-semibold text-accent hover:text-accent-600">
+            <a href="{{ lroute('marketing.home') }}" class="mt-8 inline-block font-semibold text-accent-700 hover:text-accent-800">
                 Back to divin.ai &rarr;
             </a>
         </div>

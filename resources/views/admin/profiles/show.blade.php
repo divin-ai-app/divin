@@ -18,7 +18,7 @@
                 View public page
             </a>
             <a href="{{ lroute('marketing.dashboard.edit', ['profile' => $profile->slug]) }}"
-               class="rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-white hover:bg-accent-600">
+               class="rounded-lg bg-accent-700 px-4 py-2 text-sm font-semibold text-white hover:bg-accent-800">
                 Edit profile
             </a>
         </div>
