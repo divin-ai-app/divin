@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\EnsureIsStaff;
 use App\Http\Middleware\SetLocaleFromRoute;
 use App\Http\Middleware\VerifyIngestionKey;
 use Illuminate\Foundation\Application;
@@ -18,6 +19,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'locale' => SetLocaleFromRoute::class,
             'ingestion.key' => VerifyIngestionKey::class,
+            'staff' => EnsureIsStaff::class,
         ]);
 
         // Login lives at the locale-scoped `marketing.login`, not the

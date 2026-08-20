@@ -5,12 +5,12 @@ namespace App\Http\Controllers;
 use App\Enums\ClaimRequestStatus;
 use App\Enums\ClaimStatus;
 use App\Enums\PlanTier;
-use App\Enums\Role;
 use App\Enums\VerificationMethod;
 use App\Mail\ClaimOtpMail;
 use App\Models\BusinessProfile;
 use App\Models\ClaimRequest;
 use App\Models\ProfileOwnership;
+use App\Support\ClaimGranter;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -200,19 +200,7 @@ class ClaimController extends Controller
 
     private function markVerified(ClaimRequest $claimRequest, BusinessProfile $profile): void
     {
-        $claimRequest->update(['status' => ClaimRequestStatus::Verified]);
-
-        ProfileOwnership::query()->updateOrCreate(
-            ['user_id' => $claimRequest->requested_by_user_id, 'profile_id' => $profile->id],
-            ['role' => Role::Owner, 'granted_at' => now(), 'granted_via_claim_request_id' => $claimRequest->id],
-        );
-
-        $claimRequest->events()->create([
-            'actor_user_id' => $claimRequest->requested_by_user_id,
-            'action' => 'otp_verified',
-        ]);
-
-        $profile->update(['claim_status' => ClaimStatus::Claimed]);
+        ClaimGranter::grant($claimRequest, ClaimRequestStatus::Verified, 'otp_verified');
     }
 
     private function userOwns(BusinessProfile $profile): bool

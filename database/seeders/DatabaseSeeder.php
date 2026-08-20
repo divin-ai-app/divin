@@ -2,15 +2,21 @@
 
 namespace Database\Seeders;
 
+use App\Enums\ClaimRequestStatus;
 use App\Enums\ClaimStatus;
+use App\Enums\DisputeStatus;
+use App\Enums\DisputeType;
 use App\Enums\Industry;
 use App\Enums\LegalStatus;
 use App\Enums\PlanTier;
 use App\Enums\ProfileStatus;
 use App\Enums\Role;
 use App\Enums\SubscriptionStatus;
+use App\Enums\VerificationMethod;
 use App\Models\BusinessProfile;
+use App\Models\ClaimRequest;
 use App\Models\CountryClearance;
+use App\Models\Dispute;
 use App\Models\ProfileOwnership;
 use App\Models\Subscription;
 use App\Models\User;
@@ -30,6 +36,7 @@ class DatabaseSeeder extends Seeder
         $this->seedCountryClearances();
         $demoOwner = $this->seedDemoUsers();
         $this->seedBusinessProfiles($demoOwner);
+        $this->seedAdminQueueSamples($demoOwner);
     }
 
     private function seedCountryClearances(): void
@@ -125,6 +132,41 @@ class DatabaseSeeder extends Seeder
                     ],
                 );
             }
+        }
+    }
+
+    /**
+     * A couple of non-empty rows in each Phase 5 admin queue, so the back-
+     * office doesn't look broken/empty the first time staff open it.
+     */
+    private function seedAdminQueueSamples(User $demoOwner): void
+    {
+        $pendingProfile = BusinessProfile::query()->where('claim_status', ClaimStatus::PendingClaim)->first();
+
+        if ($pendingProfile && ! $pendingProfile->claimRequests()->exists()) {
+            ClaimRequest::query()->create([
+                'profile_id' => $pendingProfile->id,
+                'requested_by_user_id' => $demoOwner->id,
+                'verification_method' => VerificationMethod::DocumentUpload,
+                'contact_value' => '',
+                'status' => ClaimRequestStatus::AwaitingVerification,
+                'review_notes' => "I'm the manager here — attached a copy of my business registration certificate.",
+            ]);
+        }
+
+        $publishedProfile = BusinessProfile::query()->where('status', ProfileStatus::Published)
+            ->where('id', '!=', $pendingProfile?->id)
+            ->orderBy('id')
+            ->first();
+
+        if ($publishedProfile && ! $publishedProfile->disputes()->exists()) {
+            Dispute::query()->create([
+                'profile_id' => $publishedProfile->id,
+                'submitter_email' => 'reporter@example.com',
+                'type' => DisputeType::IncorrectData,
+                'description' => 'The listed opening hours are wrong — this business is now closed on Sundays.',
+                'status' => DisputeStatus::Open,
+            ]);
         }
     }
 

@@ -41,6 +41,12 @@
 
     <section class="bg-white py-section-y">
         <div class="mx-auto grid max-w-4xl gap-10 px-4 sm:px-6 lg:grid-cols-3 lg:px-8">
+            @if (session('status'))
+                <div class="lg:col-span-3 rounded-lg bg-success/10 px-4 py-3 text-sm font-medium text-success">
+                    {{ session('status') }}
+                </div>
+            @endif
+
             <div class="lg:col-span-2">
                 <h2 class="text-xl font-bold text-ink-900">About</h2>
                 <p class="mt-3 text-ink-600">{{ $profile->description_short }}</p>
@@ -114,7 +120,8 @@
                 </div>
 
                 <p class="mt-4 text-center text-xs text-ink-400">
-                    Sourced from public data. Report an issue via <a href="{{ lroute('marketing.contact') }}" class="underline">contact</a>.
+                    Sourced from public data.
+                    <a href="{{ lroute('marketing.profile.report', ['profile' => $profile->slug]) }}" class="underline">Report an issue</a>.
                 </p>
             </div>
         </div>

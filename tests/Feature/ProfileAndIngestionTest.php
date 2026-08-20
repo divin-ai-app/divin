@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\DisputeStatus;
 use App\Enums\Industry;
 use App\Enums\LegalStatus;
 use App\Enums\ProfileStatus;
@@ -54,6 +55,59 @@ class ProfileAndIngestionTest extends TestCase
         ]);
 
         $this->get('/en/p/draft-business')->assertNotFound();
+    }
+
+    public function test_anyone_can_report_a_published_profile_without_logging_in(): void
+    {
+        $profile = BusinessProfile::factory()->create([
+            'country_code' => 'MU',
+            'slug' => 'report-me',
+            'status' => ProfileStatus::Published,
+        ]);
+
+        $this->get('/en/p/report-me/report')->assertOk();
+
+        $this->post('/en/p/report-me/report', [
+            'type' => 'incorrect_data',
+            'submitter_email' => 'reporter@example.com',
+            'description' => 'The phone number listed is wrong.',
+        ])->assertRedirect('/en/p/report-me');
+
+        $this->assertDatabaseHas('disputes', [
+            'profile_id' => $profile->id,
+            'submitter_email' => 'reporter@example.com',
+            'type' => 'incorrect_data',
+            'status' => DisputeStatus::Open->value,
+        ]);
+    }
+
+    public function test_report_form_404s_for_unpublished_profile(): void
+    {
+        BusinessProfile::factory()->create([
+            'country_code' => 'MU',
+            'slug' => 'draft-report-target',
+            'status' => ProfileStatus::Draft,
+        ]);
+
+        $this->get('/en/p/draft-report-target/report')->assertNotFound();
+
+        $this->post('/en/p/draft-report-target/report', [
+            'type' => 'incorrect_data',
+            'submitter_email' => 'reporter@example.com',
+            'description' => 'Test.',
+        ])->assertNotFound();
+    }
+
+    public function test_report_submission_validates_required_fields(): void
+    {
+        BusinessProfile::factory()->create([
+            'country_code' => 'MU',
+            'slug' => 'validate-me',
+            'status' => ProfileStatus::Published,
+        ]);
+
+        $this->post('/en/p/validate-me/report', [])
+            ->assertSessionHasErrors(['type', 'submitter_email', 'description']);
     }
 
     public function test_sitemap_includes_published_profiles_only(): void

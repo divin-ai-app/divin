@@ -1,5 +1,12 @@
 <?php
 
+use App\Http\Controllers\Admin\ClaimController as AdminClaimController;
+use App\Http\Controllers\Admin\CountryClearanceController;
+use App\Http\Controllers\Admin\CustomerController;
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\DataSourceController;
+use App\Http\Controllers\Admin\DisputeController;
+use App\Http\Controllers\Admin\ProfileController as AdminProfileController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClaimController;
 use App\Http\Controllers\DashboardController;
@@ -37,6 +44,10 @@ Route::prefix('{locale}')
         Route::get('/claim', [MarketingController::class, 'claim'])->name('claim');
 
         Route::get('/p/{profile}', [ProfileController::class, 'show'])->name('profile.show');
+        Route::get('/p/{profile}/report', [ProfileController::class, 'report'])->name('profile.report');
+        Route::post('/p/{profile}/report', [ProfileController::class, 'submitReport'])
+            ->middleware('throttle:5,1')
+            ->name('profile.report.submit');
 
         // --- Account login (magic-link) — see AuthController's docblock ---
         Route::middleware('guest')->group(function (): void {
@@ -85,5 +96,30 @@ Route::prefix('{locale}')
                 Route::get('/freshness', [DashboardController::class, 'freshness'])->name('freshness');
                 Route::get('/crawler-activity', [DashboardController::class, 'crawlerActivity'])->name('crawler-activity');
             });
+        });
+
+        // --- Admin back-office (Phase 5) — staff/admin only, see EnsureIsStaff.
+        // Profile *editing* deliberately reuses the dashboard.edit route
+        // (BusinessProfilePolicy@manage allows staff) rather than
+        // duplicating that form here.
+        Route::middleware(['auth', 'staff'])->prefix('admin')->name('admin.')->group(function (): void {
+            Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
+
+            Route::get('/profiles', [AdminProfileController::class, 'index'])->name('profiles.index');
+            Route::get('/profiles/{profile}', [AdminProfileController::class, 'show'])->name('profiles.show');
+
+            Route::get('/claims', [AdminClaimController::class, 'index'])->name('claims.index');
+            Route::post('/claims/{claimRequest}/approve', [AdminClaimController::class, 'approve'])->name('claims.approve');
+            Route::post('/claims/{claimRequest}/reject', [AdminClaimController::class, 'reject'])->name('claims.reject');
+
+            Route::get('/disputes', [DisputeController::class, 'index'])->name('disputes.index');
+            Route::put('/disputes/{dispute}', [DisputeController::class, 'resolve'])->name('disputes.resolve');
+
+            Route::get('/country-clearance', [CountryClearanceController::class, 'index'])->name('country-clearance.index');
+            Route::put('/country-clearance/{clearance}', [CountryClearanceController::class, 'update'])->name('country-clearance.update');
+
+            Route::get('/data-sources', [DataSourceController::class, 'index'])->name('data-sources.index');
+
+            Route::get('/customers', [CustomerController::class, 'index'])->name('customers.index');
         });
     });
