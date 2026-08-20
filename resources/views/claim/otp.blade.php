@@ -28,7 +28,7 @@
                 <div>
                     <label for="code" class="block text-sm font-medium text-ink-700">6-digit code</label>
                     <input type="text" name="code" id="code" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" required autofocus
-                           class="mt-1.5 block w-full rounded-lg border-ink-200 px-4 py-3 text-center text-2xl tracking-[0.5em] text-ink-900 focus:border-accent focus:ring-accent">
+                           class="mt-1.5 block w-full rounded-lg border border-ink-200 px-4 py-3 text-center text-2xl tracking-[0.5em] text-ink-900 focus:border-accent focus:ring-accent">
                 </div>
                 <button type="submit"
                         class="w-full rounded-lg bg-accent px-6 py-3.5 font-semibold text-white transition hover:bg-accent-600">

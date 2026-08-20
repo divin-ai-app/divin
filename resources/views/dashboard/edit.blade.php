@@ -27,49 +27,49 @@
                 <div>
                     <label for="name" class="block text-sm font-medium text-ink-700">Name</label>
                     <input type="text" name="name" id="name" value="{{ old('name', $profile->name) }}" required
-                           class="mt-1.5 block w-full rounded-lg border-ink-200 bg-white px-4 py-2.5 text-ink-900 focus:border-accent focus:ring-accent">
+                           class="mt-1.5 block w-full rounded-lg border border-ink-200 bg-white px-4 py-2.5 text-ink-900 focus:border-accent focus:ring-accent">
                 </div>
                 <div>
                     <label for="category" class="block text-sm font-medium text-ink-700">Category</label>
                     <input type="text" name="category" id="category" value="{{ old('category', $profile->category) }}" required
-                           class="mt-1.5 block w-full rounded-lg border-ink-200 bg-white px-4 py-2.5 text-ink-900 focus:border-accent focus:ring-accent">
+                           class="mt-1.5 block w-full rounded-lg border border-ink-200 bg-white px-4 py-2.5 text-ink-900 focus:border-accent focus:ring-accent">
                 </div>
             </div>
 
             <div class="mt-4">
                 <label for="description_short" class="block text-sm font-medium text-ink-700">Short description</label>
                 <textarea name="description_short" id="description_short" rows="2" required
-                          class="mt-1.5 block w-full rounded-lg border-ink-200 bg-white px-4 py-2.5 text-ink-900 focus:border-accent focus:ring-accent">{{ old('description_short', $profile->description_short) }}</textarea>
+                          class="mt-1.5 block w-full rounded-lg border border-ink-200 bg-white px-4 py-2.5 text-ink-900 focus:border-accent focus:ring-accent">{{ old('description_short', $profile->description_short) }}</textarea>
             </div>
 
             <div class="mt-4">
                 <label for="description_long" class="block text-sm font-medium text-ink-700">Full description (optional)</label>
                 <textarea name="description_long" id="description_long" rows="4"
-                          class="mt-1.5 block w-full rounded-lg border-ink-200 bg-white px-4 py-2.5 text-ink-900 focus:border-accent focus:ring-accent">{{ old('description_long', $profile->description_long) }}</textarea>
+                          class="mt-1.5 block w-full rounded-lg border border-ink-200 bg-white px-4 py-2.5 text-ink-900 focus:border-accent focus:ring-accent">{{ old('description_long', $profile->description_long) }}</textarea>
             </div>
 
             <div class="mt-4 grid gap-4 sm:grid-cols-3">
                 <div>
                     <label for="phone" class="block text-sm font-medium text-ink-700">Phone</label>
                     <input type="text" name="phone" id="phone" value="{{ old('phone', $profile->phone) }}"
-                           class="mt-1.5 block w-full rounded-lg border-ink-200 bg-white px-4 py-2.5 text-ink-900 focus:border-accent focus:ring-accent">
+                           class="mt-1.5 block w-full rounded-lg border border-ink-200 bg-white px-4 py-2.5 text-ink-900 focus:border-accent focus:ring-accent">
                 </div>
                 <div>
                     <label for="public_email" class="block text-sm font-medium text-ink-700">Public email</label>
                     <input type="email" name="public_email" id="public_email" value="{{ old('public_email', $profile->public_email) }}"
-                           class="mt-1.5 block w-full rounded-lg border-ink-200 bg-white px-4 py-2.5 text-ink-900 focus:border-accent focus:ring-accent">
+                           class="mt-1.5 block w-full rounded-lg border border-ink-200 bg-white px-4 py-2.5 text-ink-900 focus:border-accent focus:ring-accent">
                 </div>
                 <div>
                     <label for="price_range" class="block text-sm font-medium text-ink-700">Price range</label>
                     <input type="text" name="price_range" id="price_range" value="{{ old('price_range', $profile->price_range) }}" placeholder="$$"
-                           class="mt-1.5 block w-full rounded-lg border-ink-200 bg-white px-4 py-2.5 text-ink-900 focus:border-accent focus:ring-accent">
+                           class="mt-1.5 block w-full rounded-lg border border-ink-200 bg-white px-4 py-2.5 text-ink-900 focus:border-accent focus:ring-accent">
                 </div>
             </div>
 
             <div class="mt-4">
                 <label for="website" class="block text-sm font-medium text-ink-700">Website</label>
                 <input type="url" name="website" id="website" value="{{ old('website', $profile->website) }}" placeholder="https://"
-                       class="mt-1.5 block w-full rounded-lg border-ink-200 bg-white px-4 py-2.5 text-ink-900 focus:border-accent focus:ring-accent">
+                       class="mt-1.5 block w-full rounded-lg border border-ink-200 bg-white px-4 py-2.5 text-ink-900 focus:border-accent focus:ring-accent">
             </div>
 
             <h2 class="mt-8 font-semibold text-ink-900">Hours</h2>
@@ -80,14 +80,14 @@
                         <span class="w-24 shrink-0 text-sm font-medium text-ink-700 capitalize">{{ $day }}</span>
                         <label class="flex items-center gap-1.5 text-sm text-ink-600">
                             <input type="checkbox" name="hours[{{ $day }}][closed]" value="1" {{ $isClosed ? 'checked' : '' }}
-                                   class="rounded border-ink-300 text-accent focus:ring-accent">
+                                   class="rounded border border-ink-300 text-accent focus:ring-accent">
                             Closed
                         </label>
                         <input type="time" name="hours[{{ $day }}][open]" value="{{ $isClosed ? '' : $entry['open'] }}"
-                               class="rounded-lg border-ink-200 bg-white px-3 py-1.5 text-sm text-ink-900 focus:border-accent focus:ring-accent">
+                               class="rounded-lg border border-ink-200 bg-white px-3 py-1.5 text-sm text-ink-900 focus:border-accent focus:ring-accent">
                         <span class="text-ink-400">to</span>
                         <input type="time" name="hours[{{ $day }}][close]" value="{{ $isClosed ? '' : $entry['close'] }}"
-                               class="rounded-lg border-ink-200 bg-white px-3 py-1.5 text-sm text-ink-900 focus:border-accent focus:ring-accent">
+                               class="rounded-lg border border-ink-200 bg-white px-3 py-1.5 text-sm text-ink-900 focus:border-accent focus:ring-accent">
                     </div>
                 @endforeach
             </div>
@@ -131,9 +131,9 @@
                   class="mt-4 grid gap-3 sm:grid-cols-4">
                 @csrf
                 <input type="text" name="name" placeholder="Service name" required
-                       class="rounded-lg border-ink-200 bg-white px-3 py-2 text-sm text-ink-900 focus:border-accent focus:ring-accent sm:col-span-2">
+                       class="rounded-lg border border-ink-200 bg-white px-3 py-2 text-sm text-ink-900 focus:border-accent focus:ring-accent sm:col-span-2">
                 <input type="text" name="price" placeholder="Price (optional)"
-                       class="rounded-lg border-ink-200 bg-white px-3 py-2 text-sm text-ink-900 focus:border-accent focus:ring-accent">
+                       class="rounded-lg border border-ink-200 bg-white px-3 py-2 text-sm text-ink-900 focus:border-accent focus:ring-accent">
                 <button type="submit" class="rounded-lg border border-ink-300 px-3 py-2 text-sm font-semibold text-ink-700 hover:border-accent hover:text-accent">
                     Add service
                 </button>
@@ -165,7 +165,7 @@
                 <input type="file" name="image" accept="image/*" required
                        class="text-sm text-ink-600 file:mr-3 file:rounded-lg file:border-0 file:bg-ink-100 file:px-3 file:py-2 file:text-sm file:font-semibold file:text-ink-700">
                 <input type="text" name="alt_text" placeholder="Description (optional)"
-                       class="rounded-lg border-ink-200 bg-white px-3 py-2 text-sm text-ink-900 focus:border-accent focus:ring-accent">
+                       class="rounded-lg border border-ink-200 bg-white px-3 py-2 text-sm text-ink-900 focus:border-accent focus:ring-accent">
                 <button type="submit" class="rounded-lg border border-ink-300 px-3 py-2 text-sm font-semibold text-ink-700 hover:border-accent hover:text-accent">
                     Upload
                 </button>

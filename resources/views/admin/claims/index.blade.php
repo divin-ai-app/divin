@@ -44,7 +44,7 @@
                                 @csrf
                                 <label for="review_notes_{{ $claimRequest->id }}" class="block text-xs font-medium text-ink-500">Reason (required)</label>
                                 <textarea name="review_notes" id="review_notes_{{ $claimRequest->id }}" rows="3" required
-                                          class="block w-full rounded-lg border-ink-200 bg-white px-3 py-2 text-sm text-ink-900 focus:border-accent focus:ring-accent"></textarea>
+                                          class="block w-full rounded-lg border border-ink-200 bg-white px-3 py-2 text-sm text-ink-900 focus:border-accent focus:ring-accent"></textarea>
                                 <button type="submit" class="w-full rounded-lg bg-danger px-3 py-2 text-sm font-semibold text-white hover:opacity-90">
                                     Confirm reject
                                 </button>

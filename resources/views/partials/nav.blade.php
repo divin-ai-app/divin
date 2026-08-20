@@ -27,7 +27,7 @@
         <div class="hidden items-center gap-4 lg:flex">
             <a href="{{ lroute(auth()->check() ? 'marketing.dashboard.index' : 'marketing.login') }}"
                class="text-sm font-medium text-ink-600 transition hover:text-ink-900">
-                {{ auth()->check() ? 'Dashboard' : 'Log in' }}
+                {{ auth()->check() ? 'Dashboard' : 'Sign in' }}
             </a>
             <a href="{{ lroute('marketing.claim') }}"
                class="rounded-lg bg-accent px-5 py-2.5 text-sm font-semibold text-white shadow-md transition hover:bg-accent-600">
@@ -48,7 +48,7 @@
                         </a>
                     @endforeach
                     <a href="{{ lroute(auth()->check() ? 'marketing.dashboard.index' : 'marketing.login') }}" class="text-sm font-medium text-ink-700">
-                        {{ auth()->check() ? 'Dashboard' : 'Log in' }}
+                        {{ auth()->check() ? 'Dashboard' : 'Sign in' }}
                     </a>
                     <a href="{{ lroute('marketing.claim') }}"
                        class="rounded-lg bg-accent px-4 py-2.5 text-center text-sm font-semibold text-white">

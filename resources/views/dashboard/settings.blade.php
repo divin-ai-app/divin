@@ -14,7 +14,7 @@
             <div>
                 <label for="name" class="block text-sm font-medium text-ink-700">Your name</label>
                 <input type="text" name="name" id="name" value="{{ old('name', auth()->user()->name) }}" required
-                       class="mt-1.5 block w-full rounded-lg border-ink-200 bg-white px-4 py-2.5 text-ink-900 focus:border-accent focus:ring-accent">
+                       class="mt-1.5 block w-full rounded-lg border border-ink-200 bg-white px-4 py-2.5 text-ink-900 focus:border-accent focus:ring-accent">
             </div>
 
             <div>

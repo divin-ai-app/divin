@@ -35,7 +35,7 @@
                             <div>
                                 <label for="status_{{ $dispute->id }}" class="block text-xs font-medium text-ink-500">Resolution</label>
                                 <select name="status" id="status_{{ $dispute->id }}" required
-                                        class="mt-1 block w-full rounded-lg border-ink-200 bg-white px-3 py-2 text-sm text-ink-900 focus:border-accent focus:ring-accent">
+                                        class="mt-1 block w-full rounded-lg border border-ink-200 bg-white px-3 py-2 text-sm text-ink-900 focus:border-accent focus:ring-accent">
                                     <option value="corrected">Corrected — I've fixed the listing</option>
                                     <option value="removed">Removed — unpublish this profile</option>
                                     <option value="rejected">Rejected — report isn't valid</option>
@@ -45,7 +45,7 @@
                             <div>
                                 <label for="resolution_notes_{{ $dispute->id }}" class="block text-xs font-medium text-ink-500">Notes (required)</label>
                                 <textarea name="resolution_notes" id="resolution_notes_{{ $dispute->id }}" rows="3" required
-                                          class="mt-1 block w-full rounded-lg border-ink-200 bg-white px-3 py-2 text-sm text-ink-900 focus:border-accent focus:ring-accent"></textarea>
+                                          class="mt-1 block w-full rounded-lg border border-ink-200 bg-white px-3 py-2 text-sm text-ink-900 focus:border-accent focus:ring-accent"></textarea>
                             </div>
 
                             <button type="submit" class="w-full rounded-lg bg-accent px-3 py-2 text-sm font-semibold text-white hover:bg-accent-600">

@@ -30,7 +30,7 @@
                         </td>
                         <td class="px-4 py-3 text-ink-600">{{ $clearance->profiles_count }}</td>
                         <td class="px-4 py-3">
-                            <select name="legal_status" form="{{ $formId }}" class="rounded-lg border-ink-200 bg-white px-2 py-1.5 text-sm text-ink-900 focus:border-accent focus:ring-accent">
+                            <select name="legal_status" form="{{ $formId }}" class="rounded-lg border border-ink-200 bg-white px-2 py-1.5 text-sm text-ink-900 focus:border-accent focus:ring-accent">
                                 @foreach (\App\Enums\LegalStatus::cases() as $status)
                                     <option value="{{ $status->value }}" @selected($clearance->legal_status === $status)>{{ ucfirst(str_replace('_', ' ', $status->value)) }}</option>
                                 @endforeach
@@ -38,11 +38,11 @@
                         </td>
                         <td class="px-4 py-3 text-center">
                             <input type="checkbox" name="gdpr_excluded" value="1" form="{{ $formId }}" @checked($clearance->gdpr_excluded)
-                                   class="rounded border-ink-300 text-accent focus:ring-accent">
+                                   class="rounded border border-ink-300 text-accent focus:ring-accent">
                         </td>
                         <td class="px-4 py-3">
                             <input type="text" name="notes" value="{{ $clearance->notes }}" placeholder="Optional notes" form="{{ $formId }}"
-                                   class="w-48 rounded-lg border-ink-200 bg-white px-2 py-1.5 text-sm text-ink-900 focus:border-accent focus:ring-accent">
+                                   class="w-48 rounded-lg border border-ink-200 bg-white px-2 py-1.5 text-sm text-ink-900 focus:border-accent focus:ring-accent">
                         </td>
                         <td class="px-4 py-3">
                             <button type="submit" form="{{ $formId }}" class="rounded-lg bg-accent px-3 py-1.5 text-sm font-semibold text-white hover:bg-accent-600">

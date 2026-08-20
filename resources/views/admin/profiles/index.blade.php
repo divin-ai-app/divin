@@ -10,12 +10,12 @@
         <div>
             <label for="q" class="block text-xs font-medium text-ink-500">Search name</label>
             <input type="text" name="q" id="q" value="{{ $filters['q'] ?? '' }}"
-                   class="mt-1 w-56 rounded-lg border-ink-200 bg-white px-3 py-2 text-sm text-ink-900 focus:border-accent focus:ring-accent">
+                   class="mt-1 w-56 rounded-lg border border-ink-200 bg-white px-3 py-2 text-sm text-ink-900 focus:border-accent focus:ring-accent">
         </div>
 
         <div>
             <label for="status" class="block text-xs font-medium text-ink-500">Status</label>
-            <select name="status" id="status" class="mt-1 rounded-lg border-ink-200 bg-white px-3 py-2 text-sm text-ink-900 focus:border-accent focus:ring-accent">
+            <select name="status" id="status" class="mt-1 rounded-lg border border-ink-200 bg-white px-3 py-2 text-sm text-ink-900 focus:border-accent focus:ring-accent">
                 <option value="">Any</option>
                 @foreach (\App\Enums\ProfileStatus::cases() as $status)
                     <option value="{{ $status->value }}" @selected(($filters['status'] ?? null) === $status->value)>{{ ucfirst($status->value) }}</option>
@@ -25,7 +25,7 @@
 
         <div>
             <label for="country" class="block text-xs font-medium text-ink-500">Country</label>
-            <select name="country" id="country" class="mt-1 rounded-lg border-ink-200 bg-white px-3 py-2 text-sm text-ink-900 focus:border-accent focus:ring-accent">
+            <select name="country" id="country" class="mt-1 rounded-lg border border-ink-200 bg-white px-3 py-2 text-sm text-ink-900 focus:border-accent focus:ring-accent">
                 <option value="">Any</option>
                 @foreach ($countries as $country)
                     <option value="{{ $country }}" @selected(($filters['country'] ?? null) === $country)>{{ $country }}</option>
@@ -35,7 +35,7 @@
 
         <div>
             <label for="industry" class="block text-xs font-medium text-ink-500">Industry</label>
-            <select name="industry" id="industry" class="mt-1 rounded-lg border-ink-200 bg-white px-3 py-2 text-sm text-ink-900 focus:border-accent focus:ring-accent">
+            <select name="industry" id="industry" class="mt-1 rounded-lg border border-ink-200 bg-white px-3 py-2 text-sm text-ink-900 focus:border-accent focus:ring-accent">
                 <option value="">Any</option>
                 @foreach (\App\Enums\Industry::cases() as $industry)
                     <option value="{{ $industry->value }}" @selected(($filters['industry'] ?? null) === $industry->value)>{{ $industry->label() }}</option>

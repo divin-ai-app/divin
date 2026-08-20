@@ -15,7 +15,7 @@
                 <div>
                     <label for="type" class="block text-sm font-medium text-ink-700">What's wrong?</label>
                     <select name="type" id="type" required
-                            class="mt-1.5 block w-full rounded-lg border-ink-200 bg-white px-4 py-2.5 text-ink-900 focus:border-accent focus:ring-accent">
+                            class="mt-1.5 block w-full rounded-lg border border-ink-200 bg-white px-4 py-2.5 text-ink-900 focus:border-accent focus:ring-accent">
                         <option value="not_my_business">This isn't my business</option>
                         <option value="incorrect_data">Some information is incorrect</option>
                         <option value="duplicate">This is a duplicate listing</option>
@@ -28,7 +28,7 @@
                 <div>
                     <label for="submitter_email" class="block text-sm font-medium text-ink-700">Your email</label>
                     <input type="email" name="submitter_email" id="submitter_email" value="{{ old('submitter_email') }}" required
-                           class="mt-1.5 block w-full rounded-lg border-ink-200 bg-white px-4 py-2.5 text-ink-900 focus:border-accent focus:ring-accent">
+                           class="mt-1.5 block w-full rounded-lg border border-ink-200 bg-white px-4 py-2.5 text-ink-900 focus:border-accent focus:ring-accent">
                     <p class="mt-1 text-xs text-ink-400">So we can follow up if we need more details.</p>
                     @error('submitter_email') <p class="mt-1 text-sm text-danger">{{ $message }}</p> @enderror
                 </div>
@@ -36,7 +36,7 @@
                 <div>
                     <label for="description" class="block text-sm font-medium text-ink-700">Details</label>
                     <textarea name="description" id="description" rows="5" required
-                              class="mt-1.5 block w-full rounded-lg border-ink-200 bg-white px-4 py-2.5 text-ink-900 focus:border-accent focus:ring-accent">{{ old('description') }}</textarea>
+                              class="mt-1.5 block w-full rounded-lg border border-ink-200 bg-white px-4 py-2.5 text-ink-900 focus:border-accent focus:ring-accent">{{ old('description') }}</textarea>
                     @error('description') <p class="mt-1 text-sm text-danger">{{ $message }}</p> @enderror
                 </div>
 

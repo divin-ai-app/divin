@@ -18,7 +18,7 @@
                 <div>
                     <label for="message" class="block text-sm font-medium text-ink-700">Tell us about your connection to this business</label>
                     <textarea name="message" id="message" rows="6" required
-                              class="mt-1.5 block w-full rounded-lg border-ink-200 px-4 py-3 text-ink-900 focus:border-accent focus:ring-accent"></textarea>
+                              class="mt-1.5 block w-full rounded-lg border border-ink-200 px-4 py-3 text-ink-900 focus:border-accent focus:ring-accent"></textarea>
                     @error('message')
                         <p class="mt-1 text-sm text-danger">{{ $message }}</p>
                     @enderror
