@@ -26,6 +26,15 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->redirectGuestsTo(fn (Request $request) => route('marketing.login', [
             'locale' => $request->route('locale') ?? config('locales.default'),
         ]));
+
+        // The flip side: an already-authenticated user hitting a guest-only
+        // route (e.g. /login while still signed in) previously fell back to
+        // Laravel's unconfigured default (bare '/', which redirects to the
+        // marketing homepage) — confusing, since it looks like the login
+        // page doesn't exist rather than "you're already signed in."
+        $middleware->redirectUsersTo(fn (Request $request) => route('marketing.dashboard.index', [
+            'locale' => $request->route('locale') ?? config('locales.default'),
+        ]));
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(

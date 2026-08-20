@@ -66,6 +66,13 @@ class AuthAndClaimFlowTest extends TestCase
         $this->get('/en/dashboard')->assertRedirect('/en/login');
     }
 
+    public function test_already_authenticated_user_visiting_login_is_sent_to_dashboard_not_home(): void
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user)->get('/en/login')->assertRedirect('/en/dashboard');
+    }
+
     public function test_claim_with_otp_grants_ownership_and_advances_to_plan_selection(): void
     {
         Mail::fake();
