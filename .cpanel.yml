@@ -1,30 +1,46 @@
 # cPanel Git Version Control deploy tasks.
 #
-# Setup (one-time, in cPanel):
-#   1. Git Version Control → clone/pull this repo to e.g. ~/divin-ai (a
-#      folder OUTSIDE public_html — Laravel's real webroot is the app's own
-#      public/ subfolder, never the app root).
-#   2. Domains → set this domain/subdomain's Document Root to
-#      ~/divin-ai/public (cPanel lets you pick a custom document root when
-#      creating/editing a domain). If your plan can't set a custom document
-#      root, the fallback is to point public_html's index.php at
-#      ../divin-ai/public/index.php and symlink/copy the rest of public/'s
-#      contents into public_html instead.
-#   3. Copy .env.example to ~/divin-ai/.env, fill in real DB/Resend/Stripe
-#      credentials, then `php artisan key:generate` once by hand.
-#   4. Push to the deployed branch (or click "Deploy HEAD Commit") to run
-#      this file.
+# Setup (one-time, in cPanel) — confirmed working against a real HostGator
+# shared/cPanel account (no root, no pre-installed Composer, jailshell):
+#   1. Git Version Control → Create → clone this repo's GitHub URL to
+#      repository path `repositories/divin-ai` (a folder OUTSIDE
+#      public_html — Laravel's real webroot is the app's own public/
+#      subfolder, never the app root).
+#   2. Domains → Manage the target domain → set Document Root to
+#      `repositories/divin-ai/public`.
+#   3. File Manager → create `repositories/divin-ai/.env` (copy from
+#      .env.example, fill in real DB/Resend/Stripe credentials — see
+#      README.md). This must exist before the first deploy runs, since
+#      `migrate`/`config:cache` below need a real DB connection.
+#   4. In cPanel Terminal, run once by hand (this file can't do it for you,
+#      since .env doesn't exist yet on a brand-new clone):
+#        cd ~/repositories/divin-ai && php ~/composer.phar install --no-dev --optimize-autoloader
+#        php artisan key:generate
+#   5. From then on, pushing to the deployed branch (or clicking "Deploy
+#      HEAD Commit" in Git Version Control) re-runs the tasks below.
 #
 # No Node on this host: compiled Vite/Tailwind assets in public/build are
 # committed to git (see .gitignore) and must be rebuilt locally with
 # `npm run build` before every push that changes resources/css or
 # resources/js — this deploy step does not (and cannot) run `npm run build`.
+#
+# No Composer on this host either: cPanel's Git Version Control clone
+# directories default to 700 permissions (blocks the web server) and this
+# account has no `composer` binary on $PATH at all — both fixed below.
 
 ---
 deployment:
   tasks:
+    - /bin/echo "Fixing cPanel Git clone directory permissions (defaults to 700, blocks Apache)..."
+    - /bin/chmod 711 ~/repositories ~/repositories/divin-ai
+    - /bin/echo "Ensuring Composer is available (this host has none pre-installed)..."
+    - >-
+      test -f ~/composer.phar ||
+      (php -r "copy('https://getcomposer.org/installer', '/tmp/composer-setup.php');" &&
+      php /tmp/composer-setup.php --install-dir="$HOME" --filename=composer.phar &&
+      rm /tmp/composer-setup.php)
     - /bin/echo "Installing PHP dependencies..."
-    - composer install --no-dev --optimize-autoloader --no-interaction
+    - php ~/composer.phar install --no-dev --optimize-autoloader --no-interaction
     - /bin/echo "Running migrations..."
     - php artisan migrate --force
     - /bin/echo "Ensuring storage symlink exists..."

@@ -39,10 +39,34 @@ the exact local values already in use during development.
 
 ## Deployment (cPanel)
 
-See `.cpanel.yml` for the Git-deploy task list and the setup steps documented
-at the top of that file (document root, `.env`, one-time `key:generate`).
-The server never runs `npm run build` — it has no Node runtime — so compiled
-assets must already be committed and up to date before deploying.
+**Live at https://divin.ai**, deployed to a real HostGator shared/cPanel
+account (no root, no SSH key auth needed — cPanel's Terminal app + Git
+Version Control is enough). See `.cpanel.yml` for the Git-deploy task list
+and the setup steps documented at the top of that file.
+
+Confirmed quirks of this specific hosting environment, already handled by
+`.cpanel.yml` and worth knowing if something needs manual poking:
+
+- **No Composer pre-installed** — bare `composer` isn't on `$PATH` in the
+  jailed shell. `.cpanel.yml` installs `~/composer.phar` itself if missing
+  and calls `php ~/composer.phar` everywhere.
+- **cPanel Git Version Control clones default to `700` permissions** on the
+  repo folder and its parent, which silently 403s the whole site (Apache
+  can't traverse in) even though `public/` itself is fine. `.cpanel.yml`
+  runs `chmod 711` on both every deploy.
+- **The server never runs `npm run build`** — it has no Node runtime — so
+  compiled Vite/Tailwind assets in `public/build` must already be committed
+  and up to date before pushing/deploying.
+- **Resend requires domain verification before it will send** from an
+  `@divin.ai` address — done once via Resend's Domains page (adds a DKIM
+  `TXT` and an SPF `MX`+`TXT` pair under the `send.` subdomain in cPanel's
+  Zone Editor). Already verified for this deployment; if the domain or
+  Resend account ever changes, redo that first or mail silently fails with
+  a `TransportException` and no delivery, even though the app itself
+  reports success.
+- Mail hosting for `hello@divin.ai` (real inboxes, e.g. Roundcube) is
+  separate from Resend and untouched by any of the above — Resend is
+  send-only (`Enable Receiving` stays off in its dashboard).
 
 ## Testing / linting
 
