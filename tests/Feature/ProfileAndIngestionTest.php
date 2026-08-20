@@ -8,6 +8,7 @@ use App\Enums\LegalStatus;
 use App\Enums\ProfileStatus;
 use App\Models\BusinessProfile;
 use App\Models\CountryClearance;
+use App\Models\ProfileImage;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -44,6 +45,27 @@ class ProfileAndIngestionTest extends TestCase
         $response->assertOk()
             ->assertSee('Test Hotel')
             ->assertSee('LodgingBusiness', false);
+    }
+
+    public function test_published_profile_page_displays_uploaded_photos(): void
+    {
+        $profile = BusinessProfile::factory()->create([
+            'country_code' => 'MU',
+            'status' => ProfileStatus::Published,
+        ]);
+        ProfileImage::factory()->create([
+            'profile_id' => $profile->id,
+            'url' => 'https://example.test/uploads/front-of-shop.jpg',
+            'alt_text' => 'Front of the shop',
+        ]);
+
+        // The dashboard's image manager (Phase 4) had nowhere to actually
+        // show what an owner uploaded — the public page never rendered
+        // $profile->images at all. Found in Phase 7's polish pass.
+        $this->get("/en/p/{$profile->slug}")
+            ->assertOk()
+            ->assertSee('https://example.test/uploads/front-of-shop.jpg', false)
+            ->assertSee('Front of the shop', false);
     }
 
     public function test_unpublished_profile_404s(): void

@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Route;
 // See App\Http\Controllers\Api\IngestionController's docblock for the
 // contract this defines (plan §4 "Ingestion API contract").
 Route::post('/ingestion/profiles', [IngestionController::class, 'store'])
-    ->middleware('ingestion.key')
+    ->middleware(['ingestion.key', 'throttle:30,1'])
     ->name('api.ingestion.profiles.store');
 
 // Verified via Stripe-Signature header inside the controller, not route

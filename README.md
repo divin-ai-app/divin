@@ -105,6 +105,56 @@ selected for this domain if the bare `php` above isn't on the cron shell's
   and prunes them — the dashboard's crawler-activity chart reads the
   aggregate table only, so visits never show up there until this has run.
 
+### Backup / restore runbook (cPanel's native Backup Wizard)
+
+What actually needs backing up here, and why: application **code** lives in
+GitHub (`https://github.com/divin-ai-app/divin`) and is trivially
+recoverable by re-cloning — it's not the risk. The two things that only
+exist on the server are the **MySQL database** (every business profile,
+claim, subscription, dispute, freshness log — everything) and **uploaded
+owner images** (`storage/app/public/profile-images`, symlinked to
+`public/storage`). Those are what this runbook protects.
+
+**Taking a backup** — cPanel → **Backup Wizard** (or **Backup**) → **Backup**:
+
+1. Choose **Full Backup** (safest, includes the database + all files +
+   email) if disk space/download time allows, or at minimum a **Partial
+   Backup** of the **MySQL database** plus a **Home Directory** backup — the
+   two together cover both data risks above.
+2. Destination: **Home Directory** is fine for cPanel to generate the
+   archive, but then **download it locally** (or to cloud storage) —
+   leaving the only copy on the same server it's backing up defeats the
+   point if that account is ever lost entirely.
+3. Do this **before every deploy that includes a migration**, and on a
+   regular cadence otherwise (monthly is a reasonable floor for a
+   low-write-volume registry like this one; tighten it once real customer
+   data volume grows).
+
+**Restoring:**
+
+- *Whole-account disaster recovery* (lost the account entirely): cPanel →
+  **Backup Wizard** → **Restore**, upload the full-backup archive. This
+  restores files, databases, and email together.
+- *Database-only rollback* (e.g. a bad migration or bad data change, files
+  are fine): phpMyAdmin → **Import** the `.sql` dump from inside the backup
+  archive into the existing database — faster and safer than a full restore
+  when only the data is wrong, since it doesn't touch the working
+  `~/repositories/divin-ai` checkout or its `.env`.
+- *Code rollback* (a bad deploy, data is fine): this is a git operation,
+  not a backup-wizard one — `cd ~/repositories/divin-ai && git log` to find
+  the last-good commit, `git reset --hard <sha>`, then re-run the deploy
+  tasks (`.cpanel.yml`'s steps) by hand if cPanel's own "Deploy HEAD
+  Commit" won't target an arbitrary older commit directly.
+- After any restore that touches the database, re-check
+  `storage/framework/` cache state is consistent: `php artisan config:clear
+  && php artisan cache:clear` from Terminal.
+
+**Not covered by cPanel backups** — the `.env` file's secrets (`APP_KEY`,
+Stripe/Resend keys, DB credentials) are gitignored and cPanel-account-local;
+losing the account loses them too unless they're separately recorded
+somewhere (a password manager, not this repo). Worth doing once, outside
+of any automated flow.
+
 ## Testing / linting
 
 ```bash

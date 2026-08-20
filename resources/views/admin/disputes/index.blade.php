@@ -17,7 +17,7 @@
                         <p class="mt-1 text-sm text-ink-500">
                             {{ $dispute->submitter_email }} &middot; {{ $dispute->created_at->format('d M Y, H:i') }}
                         </p>
-                        <p class="mt-1 text-xs font-medium uppercase tracking-wide text-ink-400">
+                        <p class="mt-1 text-xs font-medium uppercase tracking-wide text-ink-500">
                             {{ str_replace('_', ' ', $dispute->type->value) }}
                         </p>
                         <p class="mt-3 max-w-xl text-sm text-ink-700">{{ $dispute->description }}</p>
@@ -56,7 +56,7 @@
                 </div>
             </div>
         @empty
-            <p class="rounded-xl border border-dashed border-ink-200 bg-white p-8 text-center text-sm text-ink-400">
+            <p class="rounded-xl border border-dashed border-ink-200 bg-white p-8 text-center text-sm text-ink-500">
                 No open disputes.
             </p>
         @endforelse

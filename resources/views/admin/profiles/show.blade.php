@@ -5,7 +5,7 @@
 @section('content')
     <div class="flex items-start justify-between">
         <div>
-            <a href="{{ lroute('marketing.admin.profiles.index') }}" class="text-sm font-medium text-ink-400 hover:text-ink-700">&larr; All profiles</a>
+            <a href="{{ lroute('marketing.admin.profiles.index') }}" class="text-sm font-medium text-ink-500 hover:text-ink-700">&larr; All profiles</a>
             <h1 class="mt-2 text-2xl font-bold text-ink-900">{{ $profile->name }}</h1>
             <p class="mt-1 text-sm text-ink-500">
                 {{ $profile->industry->label() }} &middot; {{ $profile->city }}, {{ $profile->country_code }}
@@ -44,7 +44,7 @@
                     <div class="flex justify-between"><dt class="text-ink-500">Renews</dt><dd class="font-medium text-ink-900">{{ $profile->subscription->renewal_date?->format('d M Y') ?? '—' }}</dd></div>
                 </dl>
             @else
-                <p class="mt-4 text-sm text-ink-400">No active subscription.</p>
+                <p class="mt-4 text-sm text-ink-500">No active subscription.</p>
             @endif
         </div>
 
@@ -67,7 +67,7 @@
                     <p class="text-ink-500">{{ ucfirst(str_replace('_', ' ', $claimRequest->status->value)) }} &middot; {{ $claimRequest->created_at->format('d M Y') }}</p>
                 </div>
             @empty
-                <p class="mt-3 text-sm text-ink-400">No claim requests yet.</p>
+                <p class="mt-3 text-sm text-ink-500">No claim requests yet.</p>
             @endforelse
         </div>
 
@@ -79,7 +79,7 @@
                     <p class="text-ink-500">{{ ucfirst(str_replace('_', ' ', $dispute->status->value)) }} &middot; {{ $dispute->created_at->format('d M Y') }}</p>
                 </div>
             @empty
-                <p class="mt-3 text-sm text-ink-400">No disputes filed.</p>
+                <p class="mt-3 text-sm text-ink-500">No disputes filed.</p>
             @endforelse
         </div>
     </div>

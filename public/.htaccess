@@ -5,6 +5,14 @@
 
     RewriteEngine On
 
+    # Force HTTPS — AutoSSL makes the cert available but doesn't redirect
+    # plain-HTTP requests on its own; without this, http://divin.ai serves
+    # the whole site unencrypted (session cookie, CSRF token, everything)
+    # rather than 404ing or bouncing to https.
+    RewriteCond %{HTTPS} off
+    RewriteCond %{HTTP:X-Forwarded-Proto} !https
+    RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]

@@ -30,7 +30,9 @@ Route::prefix('{locale}')
     ->group(function (): void {
         Route::get('/', [MarketingController::class, 'home'])->name('home');
         Route::get('/how-it-works', [MarketingController::class, 'howItWorks'])->name('how-it-works');
-        Route::get('/visibility-check', [MarketingController::class, 'visibilityCheck'])->name('visibility-check');
+        Route::get('/visibility-check', [MarketingController::class, 'visibilityCheck'])
+            ->middleware('throttle:30,1')
+            ->name('visibility-check');
 
         Route::get('/industries', [MarketingController::class, 'industriesIndex'])->name('industries.index');
         Route::get('/industries/{industry}', [MarketingController::class, 'industriesShow'])
@@ -40,8 +42,10 @@ Route::prefix('{locale}')
         Route::get('/pricing', [MarketingController::class, 'pricing'])->name('pricing');
         Route::get('/about', [MarketingController::class, 'about'])->name('about');
         Route::get('/contact', [MarketingController::class, 'contact'])->name('contact');
-        Route::post('/contact', [MarketingController::class, 'submitContact'])->name('contact.submit');
-        Route::get('/claim', [MarketingController::class, 'claim'])->name('claim');
+        Route::post('/contact', [MarketingController::class, 'submitContact'])
+            ->middleware('throttle:5,1')
+            ->name('contact.submit');
+        Route::get('/claim', [MarketingController::class, 'claim'])->middleware('throttle:30,1')->name('claim');
 
         Route::get('/p/{profile}', [ProfileController::class, 'show'])->middleware('crawler.log')->name('profile.show');
         Route::get('/p/{profile}/report', [ProfileController::class, 'report'])->name('profile.report');
@@ -56,7 +60,12 @@ Route::prefix('{locale}')
                 ->middleware('throttle:6,1')
                 ->name('login.send');
             Route::get('/verify-request', [AuthController::class, 'verifyRequest'])->name('verify-request');
-            Route::get('/login/{token}', [AuthController::class, 'consume'])->name('login.consume');
+            // The token itself is 48 random chars (~285 bits) — infeasible to
+            // brute-force regardless — this is defense-in-depth, not the
+            // actual protection.
+            Route::get('/login/{token}', [AuthController::class, 'consume'])
+                ->middleware('throttle:20,1')
+                ->name('login.consume');
         });
         Route::post('/logout', [AuthController::class, 'logout'])
             ->middleware('auth')

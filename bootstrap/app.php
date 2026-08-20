@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\AddSecurityHeaders;
 use App\Http\Middleware\EnsureIsStaff;
 use App\Http\Middleware\LogCrawlerVisit;
 use App\Http\Middleware\SetLocaleFromRoute;
@@ -17,6 +18,11 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // Global — applies to every response, web and api alike (plan §7
+        // Phase 7 hardening pass). See AddSecurityHeaders's docblock for
+        // why this stops short of a Content-Security-Policy.
+        $middleware->append(AddSecurityHeaders::class);
+
         $middleware->alias([
             'locale' => SetLocaleFromRoute::class,
             'ingestion.key' => VerifyIngestionKey::class,

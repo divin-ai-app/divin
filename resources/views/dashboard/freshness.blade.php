@@ -88,7 +88,7 @@
                                         <div>
                                             <p class="font-medium text-ink-700">{{ $d['label'] }}</p>
                                             <p class="mt-1 text-ink-600">
-                                                <span class="text-ink-400 line-through">{{ $d['current_value'] ?? '(empty)' }}</span>
+                                                <span class="text-ink-500 line-through">{{ $d['current_value'] ?? '(empty)' }}</span>
                                                 &rarr;
                                                 <span class="font-medium text-ink-900">{{ $d['source_value'] }}</span>
                                             </p>
@@ -116,7 +116,7 @@
                                                 </form>
                                             </div>
                                         @else
-                                            <span class="shrink-0 text-xs font-medium text-ink-400">
+                                            <span class="shrink-0 text-xs font-medium text-ink-500">
                                                 {{ $d['resolution'] === 'accepted_new_value' ? 'Accepted' : 'Kept current' }}
                                             </span>
                                         @endif
@@ -126,7 +126,7 @@
                         </div>
                     </div>
                 @empty
-                    <p class="rounded-xl border border-dashed border-ink-200 bg-white p-8 text-center text-sm text-ink-400">
+                    <p class="rounded-xl border border-dashed border-ink-200 bg-white p-8 text-center text-sm text-ink-500">
                         Nothing needs your attention right now.
                     </p>
                 @endforelse
@@ -149,7 +149,7 @@
                             <span class="text-ink-600">
                                 {{ count($log->discrepancies) }} field(s) from {{ $log->dataSource ? str_replace('_', ' ', $log->dataSource->source_type->value) : 'a data source' }}
                             </span>
-                            <span class="text-ink-400">
+                            <span class="text-ink-500">
                                 {{ $summary }} &middot; {{ $log->resolved_at->format('d M Y') }}
                             </span>
                         </div>

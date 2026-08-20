@@ -47,7 +47,7 @@
             Filter
         </button>
         @if (array_filter($filters))
-            <a href="{{ lroute('marketing.admin.profiles.index') }}" class="text-sm font-medium text-ink-400 hover:text-ink-700">Clear</a>
+            <a href="{{ lroute('marketing.admin.profiles.index') }}" class="text-sm font-medium text-ink-500 hover:text-ink-700">Clear</a>
         @endif
     </form>
 
@@ -79,7 +79,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="6" class="px-4 py-8 text-center text-ink-400">No profiles match these filters.</td>
+                        <td colspan="6" class="px-4 py-8 text-center text-ink-500">No profiles match these filters.</td>
                     </tr>
                 @endforelse
             </tbody>

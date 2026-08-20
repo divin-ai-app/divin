@@ -21,7 +21,7 @@
             <a href="{{ lroute($card['route']) }}" class="rounded-2xl border border-ink-200 bg-white p-6 transition hover:border-accent">
                 <p class="text-sm font-medium text-ink-500">{{ $card['label'] }}</p>
                 <p class="mt-2 text-3xl font-bold text-ink-900">{{ $card['value'] }}</p>
-                <p class="mt-1 text-xs text-ink-400">{{ $card['sub'] }}</p>
+                <p class="mt-1 text-xs text-ink-500">{{ $card['sub'] }}</p>
             </a>
         @endforeach
     </div>

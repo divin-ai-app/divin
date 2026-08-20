@@ -84,9 +84,11 @@
                             Closed
                         </label>
                         <input type="time" name="hours[{{ $day }}][open]" value="{{ $isClosed ? '' : $entry['open'] }}"
+                               aria-label="{{ ucfirst($day) }} opening time"
                                class="rounded-lg border border-ink-200 bg-white px-3 py-1.5 text-sm text-ink-900 focus:border-accent focus:ring-accent">
-                        <span class="text-ink-400">to</span>
+                        <span class="text-ink-500">to</span>
                         <input type="time" name="hours[{{ $day }}][close]" value="{{ $isClosed ? '' : $entry['close'] }}"
+                               aria-label="{{ ucfirst($day) }} closing time"
                                class="rounded-lg border border-ink-200 bg-white px-3 py-1.5 text-sm text-ink-900 focus:border-accent focus:ring-accent">
                     </div>
                 @endforeach
@@ -130,9 +132,9 @@
             <form method="POST" action="{{ lroute('marketing.dashboard.services.store', ['profile' => $profile->slug]) }}"
                   class="mt-4 grid gap-3 sm:grid-cols-4">
                 @csrf
-                <input type="text" name="name" placeholder="Service name" required
+                <input type="text" name="name" placeholder="Service name" aria-label="Service name" required
                        class="rounded-lg border border-ink-200 bg-white px-3 py-2 text-sm text-ink-900 focus:border-accent focus:ring-accent sm:col-span-2">
-                <input type="text" name="price" placeholder="Price (optional)"
+                <input type="text" name="price" placeholder="Price (optional)" aria-label="Price (optional)"
                        class="rounded-lg border border-ink-200 bg-white px-3 py-2 text-sm text-ink-900 focus:border-accent focus:ring-accent">
                 <button type="submit" class="rounded-lg border border-ink-300 px-3 py-2 text-sm font-semibold text-ink-700 hover:border-accent hover:text-accent">
                     Add service
@@ -162,9 +164,9 @@
             <form method="POST" action="{{ lroute('marketing.dashboard.images.store', ['profile' => $profile->slug]) }}"
                   enctype="multipart/form-data" class="mt-4 flex flex-wrap items-center gap-3">
                 @csrf
-                <input type="file" name="image" accept="image/*" required
+                <input type="file" name="image" accept="image/*" aria-label="Image file" required
                        class="text-sm text-ink-600 file:mr-3 file:rounded-lg file:border-0 file:bg-ink-100 file:px-3 file:py-2 file:text-sm file:font-semibold file:text-ink-700">
-                <input type="text" name="alt_text" placeholder="Description (optional)"
+                <input type="text" name="alt_text" placeholder="Description (optional)" aria-label="Image description (optional)"
                        class="rounded-lg border border-ink-200 bg-white px-3 py-2 text-sm text-ink-900 focus:border-accent focus:ring-accent">
                 <button type="submit" class="rounded-lg border border-ink-300 px-3 py-2 text-sm font-semibold text-ink-700 hover:border-accent hover:text-accent">
                     Upload

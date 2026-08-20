@@ -39,9 +39,9 @@
                             $barHeightPx = $count > 0 ? max((int) round($count / $max * $chartHeightPx), 4) : 0;
                         @endphp
                         <div class="flex flex-1 flex-col items-center justify-end gap-1" title="{{ $date }}: {{ $count }} visit(s)">
-                            <span class="text-xs text-ink-400">{{ $count > 0 ? $count : '' }}</span>
+                            <span class="text-xs text-ink-500">{{ $count > 0 ? $count : '' }}</span>
                             <div class="w-full rounded-t bg-accent/80" style="height: {{ $barHeightPx }}px;"></div>
-                            <span class="text-[10px] text-ink-400">{{ \Illuminate\Support\Carbon::parse($date)->format('d/m') }}</span>
+                            <span class="text-[10px] text-ink-500">{{ \Illuminate\Support\Carbon::parse($date)->format('d/m') }}</span>
                         </div>
                     @endforeach
                 </div>
@@ -67,7 +67,7 @@
                     </table>
                 </div>
             @else
-                <p class="mt-6 rounded-xl border border-dashed border-ink-200 bg-white p-8 text-center text-sm text-ink-400">
+                <p class="mt-6 rounded-xl border border-dashed border-ink-200 bg-white p-8 text-center text-sm text-ink-500">
                     No crawler visits recorded yet in the last 14 days.
                 </p>
             @endif
@@ -77,7 +77,7 @@
                 <button type="submit" class="rounded-lg border border-ink-300 px-4 py-2 text-sm font-medium text-ink-700 hover:border-accent hover:text-accent">
                     Simulate a bot visit
                 </button>
-                <span class="ml-2 text-xs text-ink-400">For previewing this chart — real visits are logged automatically.</span>
+                <span class="ml-2 text-xs text-ink-500">For previewing this chart — real visits are logged automatically.</span>
             </form>
         @endif
     </div>

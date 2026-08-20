@@ -51,6 +51,17 @@
                 <h2 class="text-xl font-bold text-ink-900">About</h2>
                 <p class="mt-3 text-ink-600">{{ $profile->description_short }}</p>
 
+                @if ($profile->images->isNotEmpty())
+                    <h2 class="mt-10 text-xl font-bold text-ink-900">Photos</h2>
+                    <div class="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3">
+                        @foreach ($profile->images as $index => $image)
+                            <img src="{{ $image->url }}" alt="{{ $image->alt_text ?: $profile->name }}"
+                                 @if ($index > 0) loading="lazy" @endif
+                                 class="aspect-square w-full rounded-lg object-cover">
+                        @endforeach
+                    </div>
+                @endif
+
                 @if ($profile->services->isNotEmpty())
                     <h2 class="mt-10 text-xl font-bold text-ink-900">Services</h2>
                     <ul class="mt-4 space-y-3">
@@ -119,7 +130,7 @@
                     </dl>
                 </div>
 
-                <p class="mt-4 text-center text-xs text-ink-400">
+                <p class="mt-4 text-center text-xs text-ink-500">
                     Sourced from public data.
                     <a href="{{ lroute('marketing.profile.report', ['profile' => $profile->slug]) }}" class="underline">Report an issue</a>.
                 </p>

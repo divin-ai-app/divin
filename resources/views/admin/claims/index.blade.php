@@ -19,7 +19,7 @@
                         <p class="mt-1 text-sm text-ink-500">
                             Requested by {{ $claimRequest->requester->email }} &middot; {{ $claimRequest->created_at->format('d M Y, H:i') }}
                         </p>
-                        <p class="mt-1 text-xs font-medium uppercase tracking-wide text-ink-400">
+                        <p class="mt-1 text-xs font-medium uppercase tracking-wide text-ink-500">
                             {{ str_replace('_', ' ', $claimRequest->verification_method->value) }} &middot; {{ str_replace('_', ' ', $claimRequest->status->value) }}
                         </p>
                         @if ($claimRequest->review_notes)
@@ -54,7 +54,7 @@
                 </div>
             </div>
         @empty
-            <p class="rounded-xl border border-dashed border-ink-200 bg-white p-8 text-center text-sm text-ink-400">
+            <p class="rounded-xl border border-dashed border-ink-200 bg-white p-8 text-center text-sm text-ink-500">
                 Nothing pending review.
             </p>
         @endforelse

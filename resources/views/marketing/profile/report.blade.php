@@ -29,7 +29,7 @@
                     <label for="submitter_email" class="block text-sm font-medium text-ink-700">Your email</label>
                     <input type="email" name="submitter_email" id="submitter_email" value="{{ old('submitter_email') }}" required
                            class="mt-1.5 block w-full rounded-lg border border-ink-200 bg-white px-4 py-2.5 text-ink-900 focus:border-accent focus:ring-accent">
-                    <p class="mt-1 text-xs text-ink-400">So we can follow up if we need more details.</p>
+                    <p class="mt-1 text-xs text-ink-500">So we can follow up if we need more details.</p>
                     @error('submitter_email') <p class="mt-1 text-sm text-danger">{{ $message }}</p> @enderror
                 </div>
 

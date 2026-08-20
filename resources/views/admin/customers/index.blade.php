@@ -53,7 +53,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="5" class="px-4 py-8 text-center text-ink-400">No subscriptions yet.</td>
+                        <td colspan="5" class="px-4 py-8 text-center text-ink-500">No subscriptions yet.</td>
                     </tr>
                 @endforelse
             </tbody>

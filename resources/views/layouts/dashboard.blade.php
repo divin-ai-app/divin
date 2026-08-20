@@ -41,7 +41,7 @@
 
                 <div class="border-t border-ink-100 px-6 py-4">
                     <p class="truncate text-sm font-medium text-ink-900">{{ $profile->name }}</p>
-                    <a href="{{ lroute('marketing.dashboard.index') }}" class="text-xs font-medium text-ink-400 hover:text-ink-700">
+                    <a href="{{ lroute('marketing.dashboard.index') }}" class="text-xs font-medium text-ink-500 hover:text-ink-700">
                         Switch business
                     </a>
                 </div>
